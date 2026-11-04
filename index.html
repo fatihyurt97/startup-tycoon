@@ -1078,5 +1078,784 @@ if(!storageWorks){
   toast("⚠ Tarayıcı kayıt izni vermiyor. İlerlemeni kaydı indir düğmesiyle yedekle.");
 }
 </script>
+<script>
+(() => {
+  "use strict";
+
+  const LANGUAGE_KEY = "startup-empire-language";
+
+  const languages = {
+    tr: { name: "Türkçe", locale: "tr-TR" },
+    en: { name: "English", locale: "en-US" },
+    uk: { name: "Українська", locale: "uk-UA" }
+  };
+
+  let currentLanguage = "tr";
+
+  try {
+    const saved = localStorage.getItem(LANGUAGE_KEY);
+    if (languages[saved]) currentLanguage = saved;
+  } catch {
+    // Dil kaydedilemiyorsa oyun çalışmaya devam eder.
+  }
+
+  /*
+   * Her satır:
+   * [Türkçe kaynak metin, İngilizce, Ukraynaca]
+   *
+   * Türkçe, oyunun mevcut kaynak dilidir.
+   */
+  const translations = [
+    // Başlık ve üst menü
+    [
+      "NEON EDITION · Garajdan küresel imparatorluğa",
+      "NEON EDITION · From a garage to a global empire",
+      "NEON EDITION · Від гаража до світової імперії"
+    ],
+    ["↓ Kaydı indir", "↓ Export save", "↓ Експорт збереження"],
+    ["↑ Yükle", "↑ Import save", "↑ Імпорт збереження"],
+    ["Sıfırla", "Reset", "Скинути"],
+    [
+      "● Otomatik kayıt açık",
+      "● Autosave enabled",
+      "● Автозбереження увімкнено"
+    ],
+    ["● Kaydedildi · ", "● Saved · ", "● Збережено · "],
+    [
+      "⚠ Kayıt kullanılamıyor — kaydı indir",
+      "⚠ Saving unavailable — export your save",
+      "⚠ Збереження недоступне — експортуйте файл"
+    ],
+
+    // İstatistikler
+    ["Şirket kasası", "Company funds", "Кошти компанії"],
+    ["Saniyelik gelir", "Income per second", "Дохід за секунду"],
+    ["Ar-Ge puanı", "Research points", "Очки досліджень"],
+    ["Şirket değerlemesi", "Company valuation", "Вартість компанії"],
+    ["Bu tur: ", "This run: ", "Поточний цикл: "],
+    ["Tüm zamanlar: ", "All-time earnings: ", "Загальний заробіток: "],
+    ["Üretim: ", "Production: ", "Виробництво: "],
+    [" puan/sn", " RP/s", " очок/с"],
+    [" Ar-Ge/sn", " RP/s", " очок досліджень/с"],
+    ["/sn", "/s", "/с"],
+
+    // Ofis ve tıklama
+    ["🏢 Merkez ofis", "🏢 Headquarters", "🏢 Головний офіс"],
+    ["Seviye ", "Level ", "Рівень "],
+    ["Garaj Ofis", "Garage Office", "Офіс у гаражі"],
+    ["Kuluçka Merkezi", "Startup Incubator", "Бізнес-інкубатор"],
+    ["Şehir Stüdyosu", "City Studio", "Міська студія"],
+    ["Plaza Merkezi", "Business Tower", "Бізнес-вежа"],
+    ["Teknoloji Kampüsü", "Technology Campus", "Технологічний кампус"],
+    ["Silikon Vadisi Üssü", "Silicon Valley Base", "База в Кремнієвій долині"],
+    ["Küresel Genel Merkez", "Global Headquarters", "Глобальна штаб-квартира"],
+    ["Yapay Zeka Megakenti", "AI Megacity", "Мегаполіс ШІ"],
+    ["Yörünge Teknoloji Üssü", "Orbital Technology Base", "Орбітальна технологічна база"],
+    ["Ofis üretimi ", "Office production ", "Виробництво офісу "],
+    [" · Toplam ekip: ", " · Total staff: ", " · Усього працівників: "],
+    ["Yükselt · ", "Upgrade · ", "Покращити · "],
+    [
+      "✓ En yüksek ofis seviyesindesin",
+      "✓ Maximum office level reached",
+      "✓ Досягнуто максимального рівня офісу"
+    ],
+    ["⌨️ Ürün geliştir", "⌨️ Develop your product", "⌨️ Розробляти продукт"],
+    ["Her tıklama +", "Each click +", "За кожне натискання +"],
+    [
+      "İlk ekibini kur, pasif gelir kazan ve yeni departmanların kilidini aç.",
+      "Build your first team, earn passive income and unlock new departments.",
+      "Створіть першу команду, отримуйте пасивний дохід і відкривайте нові відділи."
+    ],
+
+    // Hedefler
+    ["🎯 Büyüme hedefi", "🎯 Growth milestone", "🎯 Ціль розвитку"],
+    [" tamamlandı", " completed", " виконано"],
+    [" tur kazancına ulaş", " in earnings this run", " заробітку за поточний цикл"],
+    [
+      "Tüm büyüme hedefleri tamamlandı!",
+      "All growth milestones completed!",
+      "Усі цілі розвитку виконано!"
+    ],
+    [
+      "Yeni Exit’lerle imparatorluğunu büyütmeye devam et.",
+      "Keep growing your empire through new exits.",
+      "Продовжуйте розвивати імперію, продаючи нові компанії."
+    ],
+    ["Mevcut tur bonusu: ", "Current run bonus: ", "Бонус поточного циклу: "],
+    [" · Sonraki hedef: ", " · Next milestone: ", " · Наступна ціль: "],
+
+    // Personeller
+    ["👥 Departmanlar ve ekip", "👥 Departments and staff", "👥 Відділи та команда"],
+    ["Stajyer", "Intern", "Стажер"],
+    ["Junior Yazılımcı", "Junior Developer", "Молодший розробник"],
+    ["Senior Mimar", "Senior Architect", "Старший архітектор"],
+    ["Ürün Ekibi", "Product Team", "Продуктова команда"],
+    ["Ar-Ge Uzmanı", "Research Specialist", "Спеціаліст із досліджень"],
+    ["Büyüme Departmanı", "Growth Department", "Відділ розвитку"],
+    ["Veri Merkezi", "Data Center", "Центр обробки даних"],
+    ["Kuantum Laboratuvarı", "Quantum Laboratory", "Квантова лабораторія"],
+    ["Küresel AI Ağı", "Global AI Network", "Глобальна мережа ШІ"],
+    ["Birim: +", "Per unit: +", "За одиницю: +"],
+    [" · Temel +", " · Base +", " · Базово +"],
+    ["Toplu: ", "Batch: ", "Разом: "],
+    ["Sonraki: ", "Next: ", "Наступна: "],
+    ["Açılış: ", "Unlocks at: ", "Відкривається: "],
+    ["🔒 Ofis seviyesi ", "🔒 Office level ", "🔒 Рівень офісу "],
+    [" gerekiyor", " required", " потрібен"],
+    ["Kilitli", "Locked", "Заблоковано"],
+    ["İşe al", "Hire", "Найняти"],
+    ["Al ×", "Buy ×", "Купити ×"],
+    [" satın al", " purchase", " — придбати"],
+    [
+      "Toplu alım, seçilen miktara kadar bütçenin yettiği personeli alır.",
+      "Bulk hiring buys as many staff as you can afford, up to the selected amount.",
+      "Масовий найм додає стільки працівників, скільки дозволяє бюджет, до вибраної кількості."
+    ],
+    [
+      "MAX tek işlemde en fazla 1.000 personel alır.",
+      "MAX hires up to 1,000 staff per purchase.",
+      "MAX наймає до 1 000 працівників за одну покупку."
+    ],
+
+    // Araştırmalar
+    ["🧪 Araştırma laboratuvarı", "🧪 Research laboratory", "🧪 Дослідницька лабораторія"],
+    ["Ar-Ge ile geliştir", "Upgrade with research", "Покращуйте за очки досліджень"],
+    ["Bulut Altyapısı", "Cloud Infrastructure", "Хмарна інфраструктура"],
+    ["Yapay Zeka Motoru", "AI Engine", "Рушій штучного інтелекту"],
+    ["Otomatik Kodlama", "Automated Coding", "Автоматизоване програмування"],
+    ["Kuantum İşleme", "Quantum Processing", "Квантова обробка"],
+    ["Performans Optimizasyonu", "Performance Optimization", "Оптимізація продуктивності"],
+    ["Geliştirici Araçları", "Developer Tools", "Інструменти розробника"],
+    ["Bilimsel Metodoloji", "Scientific Methodology", "Наукова методологія"],
+    ["Tüm nakit üretimi ×2.", "All cash production ×2.", "Увесь грошовий дохід ×2."],
+    ["Tüm nakit üretimi ×3.", "All cash production ×3.", "Увесь грошовий дохід ×3."],
+    ["Tüm nakit üretimi ×5.", "All cash production ×5.", "Увесь грошовий дохід ×5."],
+    [
+      "Saniyede 1 otomatik tıklama geliri.",
+      "Earn the income of 1 automatic click per second.",
+      "Отримуйте дохід від 1 автоматичного натискання за секунду."
+    ],
+    [
+      "Seviye başına +%10 nakit üretimi. Tekrarlanabilir.",
+      "+10% cash production per level. Repeatable.",
+      "+10% грошового доходу за рівень. Можна покращувати повторно."
+    ],
+    [
+      "Seviye başına +%40 tıklama gücü. Tekrarlanabilir.",
+      "+40% click power per level. Repeatable.",
+      "+40% сили натискання за рівень. Можна покращувати повторно."
+    ],
+    [
+      "Seviye başına +%20 Ar-Ge üretimi. Tekrarlanabilir.",
+      "+20% research production per level. Repeatable.",
+      "+20% виробництва очок досліджень за рівень. Можна покращувати повторно."
+    ],
+    ["Sv. ", "Lv. ", "Рів. "],
+    ["✓ Tamamlandı", "✓ Completed", "✓ Завершено"],
+    [" Ar-Ge puanı", " research points", " очок досліджень"],
+    ["Araştır", "Research", "Дослідити"],
+    ["Geliştir", "Upgrade", "Покращити"],
+    [" araştır", " research", " — дослідити"],
+    [" geliştir", " upgrade", " — покращити"],
+
+    // Exit
+    ["🚀 Exit ve yatırım", "🚀 Exit and investment", "🚀 Продаж та інвестиції"],
+    ["Toplam yatırımcı puanı", "Total investor points", "Усього очок інвестора"],
+    ["Harcanabilir puan", "Available points", "Доступні очки"],
+    ["Kalıcı yatırımcı çarpanı", "Permanent investor multiplier", "Постійний множник інвестора"],
+    ["Sonraki puan eşiği: ", "Next point threshold: ", "Поріг наступного очка: "],
+    [" · Kalan: ", " · Remaining: ", " · Залишилося: "],
+    ["Şirketi sat · +", "Sell company · +", "Продати компанію · +"],
+    ["Exit için ", "Earn ", "Заробіть "],
+    [" kazan", " to exit", " для продажу компанії"],
+    [" puan", " points", " очок"],
+    ["Exit yap", "Exit", "Продати компанію"],
+    [
+      "Yeni bir başlangıç, daha güçlü bir şirket.",
+      "A fresh start. A stronger company.",
+      "Новий початок. Сильніша компанія."
+    ],
+    [
+      "Araştırmaların sıfırlanacağını unutma.",
+      "Remember: your research will reset.",
+      "Пам’ятайте: дослідження буде скинуто."
+    ],
+
+    // Kalıcı geliştirmeler
+    ["💎 Kalıcı geliştirmeler", "💎 Permanent upgrades", "💎 Постійні покращення"],
+    ["Yatırım Ağı", "Investment Network", "Інвестиційна мережа"],
+    ["Kurucu Deneyimi", "Founder Experience", "Досвід засновника"],
+    ["Bilim Vakfı", "Science Foundation", "Науковий фонд"],
+    ["Otonom Operasyon", "Autonomous Operations", "Автономні операції"],
+    [
+      "Seviye başına kalıcı +%15 nakit üretimi.",
+      "Permanent +15% cash production per level.",
+      "Постійні +15% грошового доходу за рівень."
+    ],
+    [
+      "Seviye başına kalıcı +%25 tıklama gücü.",
+      "Permanent +25% click power per level.",
+      "Постійні +25% сили натискання за рівень."
+    ],
+    [
+      "Seviye başına kalıcı +%20 Ar-Ge üretimi.",
+      "Permanent +20% research production per level.",
+      "Постійні +20% виробництва очок досліджень за рівень."
+    ],
+    [
+      "Çevrimdışı verim +10 yüzde puan; en fazla %100.",
+      "Offline efficiency +10 percentage points; maximum 100%.",
+      "Ефективність офлайн +10 відсоткових пунктів; максимум 100%."
+    ],
+    ["✓ Maksimum", "✓ Maximum", "✓ Максимум"],
+    [" yatırım puanı", " investor points", " очок інвестора"],
+
+    // Başarımlar
+    ["🏆 Başarımlar", "🏆 Achievements", "🏆 Досягнення"],
+    [
+      "Her başarım, tüm şirketlerinde kalıcı +%2 nakit üretimi sağlar.",
+      "Each achievement grants permanent +2% cash production across all your companies.",
+      "Кожне досягнення дає постійні +2% грошового доходу в усіх ваших компаніях."
+    ],
+    ["İlk Sprint", "First Sprint", "Перший спринт"],
+    ["Gerçek Bir Ekip", "A Real Team", "Справжня команда"],
+    ["İlk Milyon", "First Million", "Перший мільйон"],
+    ["Bilimsel Atılım", "Scientific Breakthrough", "Науковий прорив"],
+    ["Kampüs Hayatı", "Campus Life", "Життя в кампусі"],
+    ["Başarılı Exit", "Successful Exit", "Успішний продаж"],
+    ["Trilyon Kulübü", "Trillion Club", "Клуб трильйонерів"],
+    ["Seri Girişimci", "Serial Entrepreneur", "Серійний підприємець"],
+    ["100 kez ürün geliştir.", "Develop your product 100 times.", "Розробіть продукт 100 разів."],
+    [
+      "Aynı anda 10 personel sahibi ol.",
+      "Own 10 staff at the same time.",
+      "Майте 10 працівників одночасно."
+    ],
+    [
+      "Tüm zamanlarda \$1 milyon kazan.",
+      "Earn \$1 million across all runs.",
+      "Заробіть \$1 мільйон за всі цикли."
+    ],
+    ["Bir araştırma tamamla.", "Complete a research upgrade.", "Завершіть одне дослідження."],
+    ["5. ofise ulaş.", "Reach office level 5.", "Досягніть 5-го рівня офісу."],
+    ["İlk şirketini sat.", "Sell your first company.", "Продайте першу компанію."],
+    [
+      "Tüm zamanlarda \$1 trilyon kazan.",
+      "Earn \$1 trillion across all runs.",
+      "Заробіть \$1 трильйон за всі цикли."
+    ],
+    ["10 kez Exit yap.", "Complete 10 exits.", "Продайте компанію 10 разів."],
+    [
+      "Tamamlandı · Kalıcı +%2 üretim",
+      "Completed · Permanent +2% production",
+      "Виконано · Постійні +2% виробництва"
+    ],
+    ["Henüz tamamlanmadı", "Not completed yet", "Ще не виконано"],
+
+    // Yardım
+    ["📖 Nasıl oynanır?", "📖 How to play", "📖 Як грати"],
+    [
+      "Personeller sürekli gelir üretir. Ofisler üretimi artırır ve yeni personeller açar. Ar-Ge uzmanları araştırma puanı üretir.",
+      "Staff generate continuous income. Offices boost production and unlock new staff. Research specialists generate research points.",
+      "Працівники постійно приносять дохід. Офіси підвищують виробництво та відкривають нових працівників. Дослідники створюють очки досліджень."
+    ],
+    [
+      "Exit, kayıt ve denge detayları",
+      "Exit, saving and balance details",
+      "Продаж, збереження та баланс гри"
+    ],
+    [
+      "Her personel alımında o personelin fiyatı yükselir.",
+      "Each purchase increases the price of that staff type.",
+      "Кожна покупка підвищує ціну працівників цього типу."
+    ],
+    [
+      "Büyüme hedefleri bu turdaki toplam kazanca göre üretim bonusu verir.",
+      "Growth milestones grant production bonuses based on your total earnings this run.",
+      "Цілі розвитку дають бонуси виробництва залежно від загального заробітку за поточний цикл."
+    ],
+    [
+      "Exit puanı: ⌊√(tur kazancı / 1 milyar)⌋.",
+      "Exit points: ⌊√(run earnings / 1 billion)⌋.",
+      "Очки за продаж: ⌊√(заробіток за цикл / 1 мільярд)⌋."
+    ],
+    [
+      "Her kalıcı yatırımcı puanı nakit üretimine +%5 katkı sağlar.",
+      "Each permanent investor point adds +5% cash production.",
+      "Кожне постійне очко інвестора додає +5% грошового доходу."
+    ],
+    [
+      "Exit; kasayı, ofisi, ekibi, Ar-Ge’yi ve araştırmaları sıfırlar.",
+      "An exit resets your funds, office, staff, research points and research upgrades.",
+      "Продаж скидає кошти, офіс, команду, очки досліджень і дослідницькі покращення."
+    ],
+    [
+      "Başarımlar ve kalıcı geliştirmeler korunur.",
+      "Achievements and permanent upgrades are kept.",
+      "Досягнення та постійні покращення зберігаються."
+    ],
+    [
+      "Harcanan yatırım puanları, toplam yatırımcı bonusunu azaltmaz.",
+      "Spending investor points does not reduce your total investor bonus.",
+      "Витрачені очки інвестора не зменшують загальний інвестиційний бонус."
+    ],
+    [
+      "Çevrimdışı kazanç en fazla 8 saat üzerinden hesaplanır.",
+      "Offline earnings are calculated for up to 8 hours.",
+      "Офлайн-заробіток нараховується максимум за 8 годин."
+    ],
+    [
+      "Başlangıçta normal üretimin %50’sini kazandırır.",
+      "Initially, offline earnings provide 50% of normal production.",
+      "Спочатку офлайн-заробіток становить 50% звичайного виробництва."
+    ],
+    [
+      "Kayıt bu tarayıcıda tutulur.",
+      "Your save is stored in this browser.",
+      "Збереження зберігається в цьому браузері."
+    ],
+    [
+      "Tarayıcı verilerini silmeden önce kaydını indir.",
+      "Export your save before clearing browser data.",
+      "Експортуйте збереження перед очищенням даних браузера."
+    ],
+    [
+      "Aynı kaydı birden fazla sekmede açık tutmaman önerilir.",
+      "Avoid opening the same save in multiple tabs.",
+      "Не відкривайте те саме збереження в кількох вкладках."
+    ],
+    [
+      "Sonsuz büyüme döngüsü · Otomatik kayıt: 10 saniye · Çevrimdışı sınır: 8 saat",
+      "Endless growth loop · Autosave: 10 seconds · Offline limit: 8 hours",
+      "Нескінченний розвиток · Автозбереження: 10 секунд · Офлайн-ліміт: 8 годин"
+    ],
+
+    // Onay pencereleri
+    ["Vazgeç", "Cancel", "Скасувати"],
+    ["Onayla", "Confirm", "Підтвердити"],
+    [
+      "Şirketini satmaya hazır mısın?",
+      "Ready to sell your company?",
+      "Готові продати компанію?"
+    ],
+    ["En az ", "At least ", "Щонайменше "],
+    [" yatırımcı puanı kazanacaksın.", " investor points will be earned.", " очок інвестора буде отримано."],
+    [
+      "Kasan, ekibin, ofisin, Ar-Ge puanın ve araştırmaların sıfırlanacak.",
+      "Your funds, staff, office, research points and research upgrades will reset.",
+      "Ваші кошти, команда, офіс, очки досліджень і дослідницькі покращення буде скинуто."
+    ],
+    [
+      "Başarımların, yatırımcı puanların ve kalıcı geliştirmelerin korunacak.",
+      "Your achievements, investor points and permanent upgrades will be kept.",
+      "Ваші досягнення, очки інвестора та постійні покращення збережуться."
+    ],
+    ["Kaydı yükle", "Import save", "Імпортувати збереження"],
+    [
+      "Mevcut ilerlemenin yerine dosyadaki kayıt gelecek.",
+      "The save file will replace your current progress.",
+      "Збереження з файлу замінить поточний прогрес."
+    ],
+    [
+      "Mevcut oyununu önce indirerek yedekleyebilirsin.",
+      "You can export your current game first to make a backup.",
+      "Спочатку можна експортувати поточну гру для резервної копії."
+    ],
+    ["Yükle", "Import", "Імпортувати"],
+    ["Tüm ilerlemeyi sil?", "Delete all progress?", "Видалити весь прогрес?"],
+    [
+      "Bu işlem mevcut oyundaki tüm ilerlemeyi ve kalıcı bonusları sıfırlar.",
+      "This resets all progress and permanent bonuses in your current game.",
+      "Ця дія скине весь прогрес і постійні бонуси поточної гри."
+    ],
+    [
+      "Geri dönmek için önceden indirilmiş bir kayıt dosyan gerekir.",
+      "You will need a previously exported save file to restore your progress.",
+      "Для відновлення прогресу потрібен раніше експортований файл збереження."
+    ],
+    ["Her şeyi sıfırla", "Reset everything", "Скинути все"],
+
+    // Bildirimler
+    ["🏆 Başarım: ", "🏆 Achievement: ", "🏆 Досягнення: "],
+    [" · Kalıcı +%2 üretim", " · Permanent +2% production", " · Постійні +2% виробництва"],
+    [
+      "🎯 Büyüme hedefi tamamlandı! Tur üretim bonusu arttı.",
+      "🎯 Growth milestone completed! Your run production bonus increased.",
+      "🎯 Ціль розвитку виконано! Бонус виробництва поточного циклу збільшено."
+    ],
+    ["🌙 Çevrimdışı kazanç: +", "🌙 Offline earnings: +", "🌙 Офлайн-заробіток: +"],
+    [" ve +", " and +", " та +"],
+    [" Ar-Ge (", " RP (", " очок досліджень ("],
+    [" dk, %", " min, ", " хв, "],
+    [" verim)", "% efficiency)", "% ефективності)"],
+    [" alındı.", " hired.", " найнято."],
+    [" geliştirildi.", " upgraded.", " покращено."],
+    [" kalıcı olarak geliştirildi.", " permanently upgraded.", " покращено назавжди."],
+    [" Yeni ofis: ", " New office: ", " Новий офіс: "],
+    ["🚀 Exit tamamlandı! +", "🚀 Exit completed! +", "🚀 Компанію продано! +"],
+    [" kalıcı yatırımcı puanı.", " permanent investor points.", " постійних очок інвестора."],
+    ["↓ Kayıt dosyası hazır.", "↓ Save file ready.", "↓ Файл збереження готовий."],
+    ["✓ Kayıt başarıyla yüklendi.", "✓ Save imported successfully.", "✓ Збереження успішно імпортовано."],
+    [
+      "Yeni imparatorluğun hazır. İyi şanslar!",
+      "Your new empire is ready. Good luck!",
+      "Нова імперія готова. Успіхів!"
+    ],
+    [
+      "⚠ Kayıt okunamadı. Yeni oyun açıldı; varsa yedek dosyanı yükleyebilirsin.",
+      "⚠ The save could not be read. A new game was started; you can import a backup if you have one.",
+      "⚠ Не вдалося прочитати збереження. Розпочато нову гру; можна імпортувати резервну копію."
+    ],
+    [
+      "⚠ Tarayıcı kayıt izni vermiyor. İlerlemeni kaydı indir düğmesiyle yedekle.",
+      "⚠ Browser saving is unavailable. Back up your progress with Export save.",
+      "⚠ Браузер не дозволяє збереження. Створіть резервну копію через експорт."
+    ],
+
+    // Kayıt hataları
+    ["Desteklenmeyen kayıt dosyası.", "Unsupported save file.", "Непідтримуваний файл збереження."],
+    [
+      "Kayıt dosyasında geçersiz değer var.",
+      "The save file contains an invalid value.",
+      "Файл збереження містить недійсне значення."
+    ],
+    ["Kayıt değerleri tutarsız.", "Save values are inconsistent.", "Значення збереження неузгоджені."],
+    [
+      "Ekip veya araştırma verisi geçersiz.",
+      "Invalid staff or research data.",
+      "Недійсні дані команди або досліджень."
+    ],
+    [
+      "Kalıcı ilerleme verisi eksik.",
+      "Permanent progress data is missing.",
+      "Відсутні дані постійного прогресу."
+    ],
+    ["Kayıt dosyası çok büyük.", "The save file is too large.", "Файл збереження завеликий."],
+    ["Kayıt yüklenemedi.", "Could not import the save.", "Не вдалося імпортувати збереження."],
+    ["Limit", "Limit", "Ліміт"]
+  ];
+
+  /*
+   * HTML'de satır sonlarıyla bölünen metinlerin de eşleşmesi için
+   * boşlukları çeviri sırasında standartlaştırıyoruz.
+   */
+  const normalize = text => text.replace(/\s+/g, " ");
+
+  const escapeRegex = text =>
+    text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const dictionary = new Map();
+
+  translations.forEach(([tr, en, uk]) => {
+    dictionary.set(normalize(tr), { en, uk });
+  });
+
+  // Uzun ifadeler önce eşleşir; çeviri tek geçişte yapılır.
+  const sourcePhrases = [...dictionary.keys()]
+    .sort((a, b) => b.length - a.length);
+
+  const phrasePattern = new RegExp(
+    sourcePhrases.map(escapeRegex).join("|"),
+    "g"
+  );
+
+  function translate(source) {
+    if (currentLanguage === "tr") return source;
+
+    const normalized = normalize(source);
+
+    return normalized.replace(phrasePattern, match => {
+      return dictionary.get(match)?.[currentLanguage] ?? match;
+    });
+  }
+
+  /*
+   * Kaynak Türkçe metinler saklanır.
+   * Böylece EN → UK → TR geçişinde çevrilmiş metin tekrar çevrilmez.
+   */
+  const textCache = new WeakMap();
+  const attributeCache = new WeakMap();
+
+  function translateTextNode(node) {
+    const current = node.nodeValue ?? "";
+
+    if (!current.trim()) return;
+
+    let entry = textCache.get(node);
+
+    // Oyun yeni bir dinamik metin yazdıysa kaynak metni güncelle.
+    if (!entry || current !== entry.output) {
+      entry = { source: current, output: current };
+    }
+
+    const output = translate(entry.source);
+
+    if (current !== output) {
+      node.nodeValue = output;
+    }
+
+    entry.output = output;
+    textCache.set(node, entry);
+  }
+
+  function translateAttributes(element) {
+    let cache = attributeCache.get(element);
+
+    if (!cache) {
+      cache = {};
+      attributeCache.set(element, cache);
+    }
+
+    for (const name of ["aria-label", "title"]) {
+      if (!element.hasAttribute(name)) continue;
+
+      const current = element.getAttribute(name);
+      let entry = cache[name];
+
+      if (!entry || current !== entry.output) {
+        entry = { source: current, output: current };
+      }
+
+      const output = translate(entry.source);
+
+      if (current !== output) {
+        element.setAttribute(name, output);
+      }
+
+      entry.output = output;
+      cache[name] = entry;
+    }
+  }
+
+  function updateSelectorLabel() {
+    const labels = {
+      tr: { label: "Dil", aria: "Oyun dili" },
+      en: { label: "Language", aria: "Game language" },
+      uk: { label: "Мова", aria: "Мова гри" }
+    };
+
+    const selected = labels[currentLanguage];
+
+    document.getElementById("language-label").textContent =
+      "🌐 " + selected.label;
+
+    document.getElementById("language-select").setAttribute(
+      "aria-label",
+      selected.aria
+    );
+  }
+
+  function translateInterface() {
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          const parent = node.parentElement;
+
+          if (!parent) return NodeFilter.FILTER_REJECT;
+
+          if (parent.closest(
+            "script, style, noscript, #language-control"
+          )) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    let node;
+
+    while ((node = walker.nextNode())) {
+      translateTextNode(node);
+    }
+
+    document.querySelectorAll("[aria-label], [title]").forEach(
+      element => {
+        if (!element.closest("#language-control")) {
+          translateAttributes(element);
+        }
+      }
+    );
+  }
+
+  // Dil seçicinin görünümü
+  const style = document.createElement("style");
+
+  style.textContent = `
+    .language-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #172139;
+    }
+
+    .language-control label {
+      color: var(--muted);
+      font-size: .75rem;
+      white-space: nowrap;
+    }
+
+    .language-control select {
+      min-height: 42px;
+      max-width: 145px;
+      border: 0;
+      border-radius: 8px;
+      padding: 7px 5px;
+      color: var(--text);
+      background: #172139;
+      font: inherit;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+
+    .language-control select:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 760px) {
+      .language-control {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .language-control select {
+        flex: 1;
+        max-width: 190px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const control = document.createElement("div");
+  control.id = "language-control";
+  control.className = "language-control";
+
+  const label = document.createElement("label");
+  label.id = "language-label";
+  label.htmlFor = "language-select";
+
+  const select = document.createElement("select");
+  select.id = "language-select";
+
+  for (const [code, config] of Object.entries(languages)) {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = config.name;
+    select.appendChild(option);
+  }
+
+  select.value = currentLanguage;
+
+  control.append(label, select);
+  document.querySelector(".header-actions").prepend(control);
+
+  /*
+   * Mevcut oyunun fmt() fonksiyonunu seçilen dile göre yeniler.
+   * Para birimi aynı kalır: USD.
+   */
+  fmt = function(number) {
+    if (!Number.isFinite(number)) return translate("Limit");
+
+    const locale = languages[currentLanguage].locale;
+
+    if (number >= 1e15) {
+      return new Intl.NumberFormat(locale, {
+        notation: "scientific",
+        maximumFractionDigits: 2
+      }).format(number);
+    }
+
+    return new Intl.NumberFormat(locale, {
+      notation: number >= 1e6 ? "compact" : "standard",
+      maximumFractionDigits: 2
+    }).format(number);
+  };
+
+  /*
+   * Oyun her render işleminde Türkçe dinamik metinlerini üretir.
+   * Ardından seçilen dil uygulanır.
+   */
+  const originalRender = render;
+
+  render = function() {
+    originalRender();
+    translateInterface();
+  };
+
+  /*
+   * Bildirim ve onay pencereleri render dışında oluşturulabildiği
+   * için ilgili alanlardaki değişimleri de takip ediyoruz.
+   */
+  let translationQueued = false;
+
+  function queueTranslation() {
+    if (translationQueued) return;
+
+    translationQueued = true;
+
+    queueMicrotask(() => {
+      translationQueued = false;
+      translateInterface();
+    });
+  }
+
+  const observer = new MutationObserver(queueTranslation);
+
+  for (const id of [
+    "toasts",
+    "modal-backdrop",
+    "save-status"
+  ]) {
+    const element = document.getElementById(id);
+
+    if (element) {
+      observer.observe(element, {
+        subtree: true,
+        childList: true,
+        characterData: true
+      });
+    }
+  }
+
+  function applyLanguage(code) {
+    if (!languages[code]) return;
+
+    currentLanguage = code;
+    select.value = code;
+
+    document.documentElement.lang = code;
+    document.title = {
+      tr: "Startup Empire — Neon Sürüm",
+      en: "Startup Empire — Neon Edition",
+      uk: "Startup Empire — Неонове видання"
+    }[code];
+
+    updateSelectorLabel();
+
+    try {
+      localStorage.setItem(LANGUAGE_KEY, code);
+    } catch {
+      // Tarayıcı depolama engeli dil değiştirmeyi engellemez.
+    }
+
+    render();
+  }
+
+  select.addEventListener("change", () => {
+    applyLanguage(select.value);
+  });
+
+  applyLanguage(currentLanguage);
+})();
+</script>  
 </body>
 </html>
