@@ -3,400 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Startup Tycoon: Garajdan Silikon Vadisi'ne</title>
+    <title>Startup Empire - Modern Idle Tycoon</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --text-color: #f8fafc;
-            --button-hover: #0ea5e9;
-            --success-color: #4ade80;
+            --bg: #090d16;
+            --card-bg: #131c2e;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --border: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            color: var(--accent-color);
+            font-size: 2.2rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
         }
 
-        #subtitle {
-            font-size: 0.85rem;
-            color: #94a3b8;
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
-        .game-container {
+        .dashboard {
             display: flex;
             gap: 15px;
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            justify-content: center;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px 20px;
+            flex: 1;
+            min-width: 220px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 5px;
+            color: var(--success);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .panel {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            flex: 1;
-            min-width: 300px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .stat-box {
-            font-size: 1.4rem;
-            margin: 10px 0;
-            font-weight: bold;
-            color: var(--success-color);
-            text-align: center;
-        }
-
-        button {
-            background-color: var(--accent-color);
-            color: #0f172a;
-            border: none;
-            padding: 10px 15px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        button:hover:not(:disabled) {
-            background-color: var(--button-hover);
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            background-color: #475569;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        .shop-item, .project-item {
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #0f172a;
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
         }
 
-        .shop-item button, .project-item button {
-            width: auto;
-            margin-top: 0;
-            padding: 6px 10px;
-            font-size: 0.85rem;
-        }
-
-        #visual-area {
-            width: 100%;
-            height: 120px;
-            background: #0b0f19;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            margin-bottom: 12px;
-            border: 2px dashed #334155;
-            font-size: 0.9rem;
-        }
-
-        .section-title {
-            font-size: 1rem;
-            color: var(--accent-color);
-            border-bottom: 1px solid #334155;
-            padding-bottom: 5px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        .info-text {
-            font-size: 0.85rem;
-            color: #94a3b8;
+        .clicker-box {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 2px dashed #4f46e5;
+            border-radius: 12px;
+            padding: 25px;
             text-align: center;
-            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .clicker-box:hover {
+            border-color: #818cf8;
+            transform: translateY(-2px);
+        }
+
+        .clicker-box:active {
+            transform: scale(0.98);
+        }
+
+        .action-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+        }
+
+        .action-btn:disabled {
+            background-color: #1e293b;
+            color: var(--text-muted);
+            cursor: not-allowed;
+            border: 1px solid var(--border);
+        }
+
+        .shop-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .shop-info div:first-child {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .shop-info div:last-child {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .shop-row button {
+            width: auto;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+        }
+
+        .prestige-panel {
+            background: linear-gradient(135deg, #451a03, #78350f);
+            border-color: #b45309;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Startup Tycoon</h1>
-        <div id="subtitle">Garajdan Silikon Vadisi'ne Yolculuk</div>
+        <h1>Startup Empire</h1>
+        <div class="subtitle">Garajdan Küresel Teknoloji Devine</div>
     </header>
 
-    <div class="game-container">
-        <!-- Sol Panel: Ofis ve Tıklama -->
+    <!-- Üst İstatistik Paneli -->
+    <div class="dashboard">
+        <div class="stat-card">
+            <div class="label">Şirket Kasası</div>
+            <div class="value" id="money-display">$0</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Saniye Başı Kazanç (CPS)</div>
+            <div class="value" id="cps-display" style="color: var(--accent);">+$0/sn</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Şirket Değerlemesi</div>
+            <div class="value" id="valuation-display" style="color: var(--warning);">$0</div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Sol Kolon: Ana Eylem & Ofis -->
         <div class="panel">
-            <div class="section-title">Ofis Durumu</div>
-            <div id="visual-area">
-                <span id="current-office-name" style="font-weight: bold; color: #38bdf8;">🏠 Garaj</span>
-                <span style="font-size: 0.8rem; margin-top: 5px;">[ İleride Buraya PNG Gelecek ]</span>
+            <div class="panel-title">
+                <span id="office-title">🏠 Garaj Ofis</span>
+                <span style="font-size: 0.8rem; color: var(--accent);">Seviye <span id="office-level">1</span></span>
             </div>
             
-            <div class="info-text">Kasa (Dolar)</div>
-            <div class="stat-box" id="money-display">$0</div>
-            
-            <button id="click-btn">💻 Kod Yaz (+<span id="click-power">1</span> $)</button>
-            
-            <div style="margin-top: 15px;">
-                <div class="info-text">Toplam Pasif Gelir: <span id="passive-display" style="color: var(--success-color);">0</span> $/sn</div>
-                <div class="info-text">Pazarlama Hype Süresi: <span id="hype-display">Yok</span></div>
+            <div class="clicker-box" id="click-btn">
+                <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">💻 Kod Satırı Yaz</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Tıklama Başına: +<span id="click-power-val">1</span>$</div>
             </div>
 
-            <button id="buy-hype" style="background-color: #f59e0b; color: #fff; margin-top: 10px;">📢 Reklam Kampanyası Başlat (50$)</button>
+            <button class="action-btn" id="upgrade-office-btn" style="background-color: var(--success);">Ofisi Büyüt (Maliyet: 500$)</button>
         </div>
 
-        <!-- Orta Panel: Ekip ve Ofis Yükseltme -->
+        <!-- Orta Kolon: Ekip ve Otomasyon -->
         <div class="panel">
-            <div class="section-title">Ekip & Otomasyon</div>
+            <div class="panel-title">İnsan Kaynakları & Ekip</div>
             
-            <div class="shop-item">
-                <div style="text-align: left;">
-                    <div id="intern-count">Stajyer: 0</div>
-                    <small class="info-text">Maliyet: <span id="intern-cost">15</span>$ | +1$/sn</small>
+            <div class="shop-row">
+                <div class="shop-info">
+                    <div id="intern-name">Stajyer (0)</div>
+                    <div>Maliyet: <span id="intern-cost">15</span>$ | +1$/sn</div>
                 </div>
-                <button id="buy-intern">Satın Al</button>
+                <button class="action-btn" id="buy-intern">İşe Al</button>
             </div>
 
-            <div class="shop-item">
-                <div style="text-align: left;">
-                    <div id="dev-count">Yazılımcı: 0</div>
-                    <small class="info-text">Maliyet: <span id="dev-cost">100</span>$ | +8$/sn</small>
+            <div class="shop-row">
+                <div class="shop-info">
+                    <div id="dev-name">Junior Yazılımcı (0)</div>
+                    <div>Maliyet: <span id="dev-cost">100</span>$ | +8$/sn</div>
                 </div>
-                <button id="buy-dev">Satın Al</button>
+                <button class="action-btn" id="buy-dev">İşe Al</button>
             </div>
 
-            <div class="section-title">Ofis Büyütme (Milestone)</div>
-            <div class="shop-item" style="flex-direction: column; align-items: stretch; gap: 5px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span id="office-level-info" style="font-weight: bold;">Mevcut: Garaj</span>
-                    <span id="office-cost-info" style="color: #f59e0b;">Maliyet: 500$</span>
+            <div class="shop-row">
+                <div class="shop-info">
+                    <div id="senior-name">Senior Architect (0)</div>
+                    <div>Maliyet: <span id="senior-cost">1100</span>$ | +65$/sn</div>
                 </div>
-                <small class="info-text" style="text-align: left;">Sonraki Ofis: Kuluçka Merkezi (Tıklama ve Pasif x2!)</small>
-                <button id="upgrade-office" style="background-color: #10b981; color: white;">Ofisi Taşı / Büyüt</button>
+                <button class="action-btn" id="buy-senior">İşe Al</button>
             </div>
         </div>
 
-        <!-- Sağ Panel: Ürün Geliştirme Projeleri -->
-        <div class="panel">
-            <div class="section-title">Ürün Geliştirme</div>
-            
-            <div class="project-item">
-                <div style="text-align: left;">
-                    <div style="font-weight: bold;">Mobil Oyun</div>
-                    <small class="info-text">Getiri: +5$/sn</small>
-                </div>
-                <button id="proj-game" onclick="buyProject('game', 300, 5)">Geliştir (300$)</button>
+        <!-- Sağ Kolon: Projeler & Prestige -->
+        <div class="panel prestige-panel">
+            <div class="panel-title" style="border-color: #b45309;">
+                <span>🚀 Melek Yatırım / Exit</span>
+                <span style="font-size: 0.8rem; color: var(--warning);">Puan: <span id="angel-points">0</span></span>
             </div>
-
-            <div class="project-item">
-                <div style="text-align: left;">
-                    <div style="font-weight: bold;">E-Ticaret Altyapısı</div>
-                    <small class="info-text">Getiri: +25$/sn</small>
-                </div>
-                <button id="proj-ecommerce" onclick="buyProject('ecommerce', 1500, 25)">Geliştir (1500$)</button>
+            <div style="font-size: 0.85rem; color: #fde68a; line-height: 1.4;">
+                Şirketini büyüterek büyük bir teknoloji devine sat (Exit yap). Her Exit kalıcı çarpan kazandırır!
             </div>
-
-            <div class="project-item">
-                <div style="text-align: left;">
-                    <div style="font-weight: bold;">Yapay Zeka (AI) Modeli</div>
-                    <small class="info-text">Getiri: +120$/sn</small>
-                </div>
-                <button id="proj-ai" onclick="buyProject('ai', 8000, 120)">Geliştir (8000$)</button>
-            </div>
+            <div style="font-size: 0.85rem; color: #fed7aa;">Mevcut Çarpan: x<span id="multiplier-val">1.0</span></div>
+            <button class="action-btn" id="prestige-btn" style="background-color: #d97706; margin-top: auto;">Şirketi Sat (Exit Yap)</button>
         </div>
     </div>
 
     <script>
-        let money = 0;
-        let clickPower = 1;
-        let passiveMultiplier = 1;
-        
-        let intern = { count: 0, cost: 15, income: 1 };
-        let dev = { count: 0, cost: 100, income: 8 };
-        
-        let offices = [
-            { name: "🏠 Garaj", cost: 0, multiplier: 1 },
-            { name: "🏢 Kuluçka Merkezi", cost: 500, multiplier: 2 },
-            { name: "🏙️ Plaza Katı", cost: 5000, multiplier: 5 },
-            { name: "🚀 Silikon Vadisi Kampüsü", cost: 30000, multiplier: 15 }
-        ];
-        let currentOfficeIndex = 0;
-
-        let projects = {
-            game: { purchased: false },
-            ecommerce: { purchased: false },
-            ai: { purchased: false }
+        // Oyun Verileri
+        let game = {
+            money: 0,
+            totalEarned: 0,
+            clickPower: 1,
+            angelPoints: 0,
+            officeLevel: 1,
+            intern: { count: 0, cost: 15, baseCost: 15, income: 1 },
+            dev: { count: 0, cost: 100, baseCost: 100, income: 8 },
+            senior: { count: 0, cost: 1100, baseCost: 1100, income: 65 }
         };
 
-        let hypeTime = 0;
+        const offices = [
+            { name: "🏠 Garaj Ofis", cost: 0, multiplier: 1 },
+            { name: "🏢 Kuluçka Merkezi", cost: 500, multiplier: 2 },
+            { name: "🏙️ Plaza Katı", cost: 7500, multiplier: 5 },
+            { name: "🚀 Silikon Vadisi Kampüsü", cost: 100000, multiplier: 15 },
+            { name: "🌐 Küresel Teknoloji Devi", cost: 1500000, multiplier: 50 }
+        ];
 
         // Elementler
         const moneyDisplay = document.getElementById('money-display');
+        const cpsDisplay = document.getElementById('cps-display');
+        const valuationDisplay = document.getElementById('valuation-display');
         const clickBtn = document.getElementById('click-btn');
-        const clickPowerDisplay = document.getElementById('click-power');
-        const passiveDisplay = document.getElementById('passive-display');
+        const clickPowerVal = document.getElementById('click-power-val');
         
+        const upgradeOfficeBtn = document.getElementById('upgrade-office-btn');
+        const officeTitle = document.getElementById('office-title');
+        const officeLevel = document.getElementById('office-level');
+
         const buyInternBtn = document.getElementById('buy-intern');
-        const internCountDisplay = document.getElementById('intern-count');
-        const internCostDisplay = document.getElementById('intern-cost');
+        const internName = document.getElementById('intern-name');
+        const internCost = document.getElementById('intern-cost');
 
         const buyDevBtn = document.getElementById('buy-dev');
-        const devCountDisplay = document.getElementById('dev-count');
-        const devCostDisplay = document.getElementById('dev-cost');
+        const devName = document.getElementById('dev-name');
+        const devCost = document.getElementById('dev-cost');
 
-        const upgradeOfficeBtn = document.getElementById('upgrade-office');
-        const officeLevelInfo = document.getElementById('office-level-info');
-        const officeCostInfo = document.getElementById('office-cost-info');
-        const currentOfficeName = document.getElementById('current-office-name');
+        const buySeniorBtn = document.getElementById('buy-senior');
+        const seniorName = document.getElementById('senior-name');
+        const seniorCost = document.getElementById('senior-cost');
 
-        const buyHypeBtn = document.getElementById('buy-hype');
-        const hypeDisplay = document.getElementById('hype-display');
+        const angelPointsDisplay = document.getElementById('angel-points');
+        const multiplierVal = document.getElementById('multiplier-val');
+        const prestigeBtn = document.getElementById('prestige-btn');
+
+        // Hesaplamalar
+        function getMultiplier() {
+            return 1 + (game.angelPoints * 0.2); // Her melek puanı %20 güç verir
+        }
+
+        function getCPS() {
+            let baseCPS = (game.intern.count * game.intern.income) + 
+                          (game.dev.count * game.dev.income) + 
+                          (game.senior.count * game.senior.income);
+            let officeMult = offices[game.officeLevel - 1].multiplier;
+            return baseCPS * officeMult * getMultiplier();
+        }
+
+        function getClickPower() {
+            let officeMult = offices[game.officeLevel - 1].multiplier;
+            return game.clickPower * officeMult * getMultiplier();
+        }
 
         // Tıklama Olayı
         clickBtn.addEventListener('click', () => {
-            let mult = hypeTime > 0 ? 2 : 1;
-            money += clickPower * passiveMultiplier * mult;
+            let earned = getClickPower();
+            game.money += earned;
+            game.totalEarned += earned;
             updateUI();
         });
 
-        // Stajyer
-        buyInternBtn.addEventListener('click', () => {
-            if (money >= intern.cost) {
-                money -= intern.cost;
-                intern.count++;
-                intern.cost = Math.floor(intern.cost * 1.15);
+        // Personel Satın Alma Fonksiyonu
+        function buyUnit(unitKey) {
+            let unit = game[unitKey];
+            if (game.money >= unit.cost) {
+                game.money -= unit.cost;
+                unit.count++;
+                unit.cost = Math.floor(unit.baseCost * Math.pow(1.15, unit.count));
                 updateUI();
             }
-        });
+        }
 
-        // Yazılımcı
-        buyDevBtn.addEventListener('click', () => {
-            if (money >= dev.cost) {
-                money -= dev.cost;
-                dev.count++;
-                dev.cost = Math.floor(dev.cost * 1.15);
-                updateUI();
-            }
-        });
+        buyInternBtn.addEventListener('click', () => buyUnit('intern'));
+        buyDevBtn.addEventListener('click', () => buyUnit('dev'));
+        buySeniorBtn.addEventListener('click', () => buyUnit('senior'));
 
-        // Ofis Yükseltme
+        // Ofis Atlama
         upgradeOfficeBtn.addEventListener('click', () => {
-            let nextOffice = offices[currentOfficeIndex + 1];
-            if (nextOffice && money >= nextOffice.cost) {
-                money -= nextOffice.cost;
-                currentOfficeIndex++;
-                passiveMultiplier = offices[currentOfficeIndex].multiplier;
-                clickPower = currentOfficeIndex + 1;
+            if (game.officeLevel < offices.length) {
+                let nextOffice = offices[game.officeLevel];
+                if (game.money >= nextOffice.cost) {
+                    game.money -= nextOffice.cost;
+                    game.officeLevel++;
+                    updateUI();
+                }
+            }
+        });
+
+        // Prestige (Exit Yapma)
+        prestigeBtn.addEventListener('click', () => {
+            let earnedPoints = Math.floor(Math.sqrt(game.totalEarned / 1000));
+            if (earnedPoints > 0) {
+                game.angelPoints += earnedPoints;
+                game.money = 0;
+                game.totalEarned = 0;
+                game.officeLevel = 1;
+                game.intern = { count: 0, cost: 15, baseCost: 15, income: 1 };
+                game.dev = { count: 0, cost: 100, baseCost: 100, income: 8 };
+                game.senior = { count: 0, cost: 1100, baseCost: 1100, income: 65 };
                 updateUI();
             }
         });
 
-        // Ürün Projeleri Satın Alma
-        function buyProject(type, cost, incomeAdd) {
-            if (money >= cost && !projects[type].purchased) {
-                money -= cost;
-                projects[type].purchased = true;
-                
-                // Pasif gelire ekle
-                if(type === 'game') intern.income += incomeAdd;
-                if(type === 'ecommerce') dev.income += incomeAdd;
-                if(type === 'ai') { intern.income += incomeAdd * 0.5; dev.income += incomeAdd * 0.5; }
-                
-                document.getElementById('proj-' + type).disabled = true;
-                document.getElementById('proj-' + type).innerText = "Tamamlandı";
-                updateUI();
-            }
-        }
-
-        // Pazarlama Kampanyası (Hype)
-        buyHypeBtn.addEventListener('click', () => {
-            if (money >= 50) {
-                money -= 50;
-                hypeTime = 15; // 15 saniye boyunca 2 kat kazanç
-                updateUI();
-            }
-        });
-
-        // Arayüz Güncelleme
+        // Arayüzü Güncelle
         function updateUI() {
-            moneyDisplay.innerText = `$${Math.floor(money)}`;
-            clickPowerDisplay.innerText = clickPower * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
-            
-            internCountDisplay.innerText = `Stajyer: ${intern.count}`;
-            internCostDisplay.innerText = intern.cost;
-            
-            devCountDisplay.innerText = `Yazılımcı: ${dev.count}`;
-            devCostDisplay.innerText = dev.cost;
+            moneyDisplay.innerText = `$${Math.floor(game.money).toLocaleString()}`;
+            cpsDisplay.innerText = `+$${Math.floor(getCPS())}/sn`;
+            valuationDisplay.innerText = `$${Math.floor(game.money + (game.totalEarned * 0.5)).toLocaleString()}`;
+            clickPowerVal.innerText = Math.floor(getClickPower());
 
-            let totalPassive = ((intern.count * intern.income) + (dev.count * dev.income)) * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
-            passiveDisplay.innerText = totalPassive;
+            // Personel Bilgileri
+            internName.innerText = `Stajyer (${game.intern.count})`;
+            internCost.innerText = game.intern.cost.toLocaleString();
+            buyInternBtn.disabled = game.money < game.intern.cost;
 
-            // Ofis Bilgileri
-            currentOfficeName.innerText = offices[currentOfficeIndex].name;
-            if (currentOfficeIndex < offices.length - 1) {
-                let next = offices[currentOfficeIndex + 1];
-                officeLevelInfo.innerText = `Mevcut: ${offices[currentOfficeIndex].name}`;
-                officeCostInfo.innerText = `Maliyet: ${next.cost}$`;
-                upgradeOfficeBtn.innerText = `Taşı: ${next.name}`;
-                upgradeOfficeBtn.disabled = money < next.cost;
+            devName.innerText = `Junior Yazılımcı (${game.dev.count})`;
+            devCost.innerText = game.dev.cost.toLocaleString();
+            buyDevBtn.disabled = game.money < game.dev.cost;
+
+            seniorName.innerText = `Senior Architect (${game.senior.count})`;
+            seniorCost.innerText = game.senior.cost.toLocaleString();
+            buySeniorBtn.disabled = game.money < game.senior.cost;
+
+            // Ofis Durumu
+            officeTitle.innerText = offices[game.officeLevel - 1].name;
+            officeLevel.innerText = game.officeLevel;
+
+            if (game.officeLevel < offices.length) {
+                let nextOffice = offices[game.officeLevel];
+                upgradeOfficeBtn.innerText = `Ofisi Büyüt: ${nextOffice.name} ($${nextOffice.cost.toLocaleString()})`;
+                upgradeOfficeBtn.disabled = game.money < nextOffice.cost;
+                upgradeOfficeBtn.style.display = "block";
             } else {
-                officeLevelInfo.innerText = `Mevcut: ${offices[currentOfficeIndex].name}`;
-                officeCostInfo.innerText = `Maksimum Seviye!`;
-                upgradeOfficeBtn.innerText = `Zirvedesin 🚀`;
-                upgradeOfficeBtn.disabled = true;
+                upgradeOfficeBtn.style.display = "none";
             }
 
-            // Buton aktiflik kontrolü
-            buyInternBtn.disabled = money < intern.cost;
-            buyDevBtn.disabled = money < dev.cost;
-            buyHypeBtn.disabled = money < 50 || hypeTime > 0;
-            
-            if(hypeTime > 0) {
-                hypeDisplay.innerText = `${hypeTime} sn kaldı! 🔥`;
-                buyHypeBtn.innerText = `Kampanya Sürüyor...`;
-            } else {
-                hypeDisplay.innerText = `Yok`;
-                buyHypeBtn.innerText = `📢 Reklam Kampanyası Başlat (50$)`;
-            }
+            // Prestige Bilgileri
+            angelPointsDisplay.innerText = game.angelPoints;
+            multiplierVal.innerText = getMultiplier().toFixed(1);
+            let potentialPoints = Math.floor(Math.sqrt(game.totalEarned / 1000));
+            prestigeBtn.innerText = `Şirketi Sat (+${potentialPoints} Yatırımcı Puanı)`;
+            prestigeBtn.disabled = potentialPoints === 0;
         }
 
-        // Saniye Başı Döngü (Game Loop)
+        // Oyun Döngüsü (Her saniye)
         setInterval(() => {
-            let totalPassive = ((intern.count * intern.income) + (dev.count * dev.income)) * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
-            money += totalPassive;
-
-            if (hypeTime > 0) {
-                hypeTime--;
-            }
-
+            let cps = getCPS();
+            game.money += cps;
+            game.totalEarned += cps;
             updateUI();
         }, 1000);
+
+        updateUI();
     </script>
 </body>
 </html>
