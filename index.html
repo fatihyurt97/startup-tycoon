@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Startup Empire - Ultimate Tycoon</title>
+    <title>Startup Empire - Hardcore Edition</title>
     <style>
         :root {
             --bg: #090d16;
@@ -14,18 +14,13 @@
             --text-muted: #94a3b8;
             --success: #10b981;
             --warning: #f59e0b;
-            --danger: #ef4444;
             --border: #1e293b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             padding: 20px;
@@ -35,190 +30,58 @@
             min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 2rem;
-            background: linear-gradient(to right, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 2rem; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--text-muted); font-size: 0.85rem; }
 
         .dashboard {
-            display: flex;
-            gap: 15px;
-            max-width: 1300px;
-            width: 100%;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            display: flex; gap: 15px; max-width: 1300px; width: 100%; margin-bottom: 20px; flex-wrap: wrap;
         }
-
         .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 18px;
-            flex: 1;
-            min-width: 200px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; flex: 1; min-width: 200px;
         }
-
-        .stat-card .label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .stat-card .value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-top: 3px;
-            color: var(--success);
-        }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+        .stat-card .value { font-size: 1.3rem; font-weight: 700; margin-top: 3px; color: var(--success); }
 
         .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            max-width: 1300px;
-            width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1300px; width: 100%;
         }
-
-        @media (max-width: 1000px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
 
         .panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;
         }
-
         .panel-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-size: 1.05rem; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
         }
 
         .clicker-box {
-            background: linear-gradient(135deg, #1e1b4b, #312e81);
-            border: 2px dashed #4f46e5;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            user-select: none;
+            background: linear-gradient(135deg, #1e1b4b, #312e81); border: 2px dashed #4f46e5; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; user-select: none; transition: 0.1s;
         }
-
-        .clicker-box:hover {
-            border-color: #818cf8;
-            transform: translateY(-2px);
-        }
-
-        .clicker-box:active {
-            transform: scale(0.98);
-        }
+        .clicker-box:hover { border-color: #818cf8; transform: translateY(-2px); }
+        .clicker-box:active { transform: scale(0.98); }
 
         .action-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
+            background-color: var(--accent); color: white; border: none; padding: 10px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; width: 100%;
         }
-
-        .action-btn:hover:not(:disabled) {
-            background-color: var(--accent-hover);
-        }
-
-        .action-btn:disabled {
-            background-color: #1e293b;
-            color: var(--text-muted);
-            cursor: not-allowed;
-            border: 1px solid var(--border);
-        }
+        .action-btn:hover:not(:disabled) { background-color: var(--accent-hover); }
+        .action-btn:disabled { background-color: #1e293b; color: var(--text-muted); cursor: not-allowed; border: 1px solid var(--border); }
 
         .shop-row, .tech-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); padding: 10px; border-radius: 8px; border: 1px solid var(--border);
         }
-
-        .shop-info div:first-child {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .shop-info div:last-child {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .shop-row button, .tech-row button {
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        #event-banner {
-            background: linear-gradient(90deg, #b45309, #d97706);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            max-width: 1300px;
-            width: 100%;
-        }
+        .shop-info div:first-child { font-weight: 600; font-size: 0.9rem; }
+        .shop-info div:last-child { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .shop-row button, .tech-row button { width: auto; padding: 6px 12px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Startup Empire</h1>
-        <div class="subtitle">Garajdan Küresel Teknoloji Devine - Ultimate Sürüm</div>
+        <div class="subtitle">Hardcore Uzun Soluklu Sürüm</div>
     </header>
 
-    <!-- Olay Bildirim Alanı -->
-    <div id="event-banner">
-        <span id="event-text">⚠️ Kriz: Sunucular yavaşladı!</span>
-        <button onclick="resolveEvent()" style="background:white; color:#b45309; border:none; padding:5px 10px; font-weight:bold; border-radius:5px; cursor:pointer;">Çözüm Bul</button>
-    </div>
-
-    <!-- Üst İstatistik Paneli -->
     <div class="dashboard">
         <div class="stat-card">
             <div class="label">Şirket Kasası</div>
@@ -239,7 +102,7 @@
     </div>
 
     <div class="main-grid">
-        <!-- Sol Kolon: Ofis & Tıklama -->
+        <!-- Sol Kolon -->
         <div class="panel">
             <div class="panel-title">
                 <span id="office-title">🏠 Garaj Ofis</span>
@@ -256,28 +119,28 @@
             <div class="panel-title" style="margin-top: 10px;">Teknoloji Araştırmaları</div>
             <div class="tech-row">
                 <div class="shop-info">
-                    <div id="tech-1-name">Bulut Altyapısı</div>
-                    <div>Maliyet: 50 Ar-Ge Puanı</div>
+                    <div>Bulut Altyapısı (x2 Çarpan)</div>
+                    <div>Maliyet: 500 Ar-Ge Puanı</div>
                 </div>
-                <button class="action-btn" id="btn-tech-1" onclick="researchTech(1)">Araştır</button>
+                <button class="action-btn" id="btn-tech-1" onclick="researchTech(1, 500)">Araştır</button>
             </div>
             <div class="tech-row">
-                <div class="tech-info">
-                    <div id="tech-2-name">Yapay Zeka Motoru</div>
-                    <div>Maliyet: 250 Ar-Ge Puanı</div>
+                <div class="shop-info">
+                    <div>Yapay Zeka Motoru (x5 Çarpan)</div>
+                    <div>Maliyet: 5,000 Ar-Ge Puanı</div>
                 </div>
-                <button class="action-btn" id="btn-tech-2" onclick="researchTech(2)">Araştır</button>
+                <button class="action-btn" id="btn-tech-2" onclick="researchTech(2, 5000)">Araştır</button>
             </div>
         </div>
 
-        <!-- Orta Kolon: İnsan Kaynakları -->
+        <!-- Orta Kolon -->
         <div class="panel">
             <div class="panel-title">Departmanlar & Ekip</div>
             
             <div class="shop-row">
                 <div class="shop-info">
                     <div id="intern-name">Stajyer (0)</div>
-                    <div>Maliyet: <span id="intern-cost">15</span>$ | +1$/sn</div>
+                    <div>Maliyet: <span id="intern-cost">25</span>$ | +0.5$/sn</div>
                 </div>
                 <button class="action-btn" id="buy-intern">İşe Al</button>
             </div>
@@ -285,7 +148,7 @@
             <div class="shop-row">
                 <div class="shop-info">
                     <div id="dev-name">Junior Yazılımcı (0)</div>
-                    <div>Maliyet: <span id="dev-cost">100</span>$ | +8$/sn</div>
+                    <div>Maliyet: <span id="dev-cost">250</span>$ | +4$/sn</div>
                 </div>
                 <button class="action-btn" id="buy-dev">İşe Al</button>
             </div>
@@ -293,7 +156,7 @@
             <div class="shop-row">
                 <div class="shop-info">
                     <div id="senior-name">Senior Architect (0)</div>
-                    <div>Maliyet: <span id="senior-cost">1100</span>$ | +65$/sn</div>
+                    <div>Maliyet: <span id="senior-cost">3500</span>$ | +35$/sn</div>
                 </div>
                 <button class="action-btn" id="buy-senior">İşe Al</button>
             </div>
@@ -301,20 +164,20 @@
             <div class="shop-row">
                 <div class="shop-info">
                     <div id="scientist-name">AR-GE Uzmanı (0)</div>
-                    <div>Maliyet: <span id="scientist-cost">5000</span>$ | +1 Ar-Ge/sn</div>
+                    <div>Maliyet: <span id="scientist-cost">25000</span>$ | +0.2 Ar-Ge/sn</div>
                 </div>
                 <button class="action-btn" id="buy-scientist" style="background-color: var(--warning);">İşe Al</button>
             </div>
         </div>
 
-        <!-- Sağ Kolon: Exit & Prestige -->
+        <!-- Sağ Kolon -->
         <div class="panel" style="background: linear-gradient(135deg, #2e1065, #4c1d95); border-color: #7c3aed;">
             <div class="panel-title" style="border-color: #7c3aed;">
                 <span>🚀 Melek Yatırım / Exit</span>
                 <span style="font-size: 0.8rem; color: #c084fc;">Puan: <span id="angel-points">0</span></span>
             </div>
             <div style="font-size: 0.85rem; color: #ddd6fe; line-height: 1.4;">
-                Şirketi dev bir teknoloji holdingine satarak kalıcı çarpan kazan ve prestij puanları topla!
+                Zirveye ulaşıp Exit yap! Yatırımcı puanı elde etmek artık çok daha zor ve değerli.
             </div>
             <div style="font-size: 0.85rem; color: #f3e8ff;">Mevcut Çarpan: x<span id="multiplier-val">1.0</span></div>
             <button class="action-btn" id="prestige-btn" style="background-color: #7c3aed; margin-top: auto;">Şirketi Sat (Exit Yap)</button>
@@ -323,28 +186,27 @@
 
     <script>
         let game = {
-            money: 0,
+            money: 10,
             totalEarned: 0,
             clickPower: 1,
             angelPoints: 0,
             officeLevel: 1,
             techPoints: 0,
             techs: { 1: false, 2: false },
-            intern: { count: 0, cost: 15, baseCost: 15, income: 1 },
-            dev: { count: 0, cost: 100, baseCost: 100, income: 8 },
-            senior: { count: 0, cost: 1100, baseCost: 1100, income: 65 },
-            scientist: { count: 0, cost: 5000, baseCost: 5000, techIncome: 1 }
+            intern: { count: 0, cost: 25, baseCost: 25, income: 0.5 },
+            dev: { count: 0, cost: 250, baseCost: 250, income: 4 },
+            senior: { count: 0, cost: 3500, baseCost: 3500, income: 35 },
+            scientist: { count: 0, cost: 25000, baseCost: 25000, techIncome: 0.2 }
         };
 
         const offices = [
             { name: "🏠 Garaj Ofis", cost: 0, multiplier: 1 },
-            { name: "🏢 Kuluçka Merkezi", cost: 1500, multiplier: 2.5 },
-            { name: "🏙️ Plaza Katı", cost: 25000, multiplier: 7 },
-            { name: "🚀 Silikon Vadisi Kampüsü", cost: 400000, multiplier: 20 },
-            { name: "🌐 Küresel Teknoloji Devi", cost: 5000000, multiplier: 60 }
+            { name: "🏢 Kuluçka Merkezi", cost: 10000, multiplier: 2 },
+            { name: "🏙️ Plaza Katı", cost: 250000, multiplier: 4 },
+            { name: "🚀 Silikon Vadisi Kampüsü", cost: 5000000, multiplier: 10 },
+            { name: "🌐 Küresel Teknoloji Devi", cost: 100000000, multiplier: 25 }
         ];
 
-        // Elementler
         const moneyDisplay = document.getElementById('money-display');
         const cpsDisplay = document.getElementById('cps-display');
         const techPointsDisplay = document.getElementById('tech-points');
@@ -377,8 +239,8 @@
         const prestigeBtn = document.getElementById('prestige-btn');
 
         function getMultiplier() {
-            let techMult = (game.techs[1] ? 1.5 : 1) * (game.techs[2] ? 2.5 : 1);
-            return (1 + (game.angelPoints * 0.25)) * techMult;
+            let techMult = (game.techs[1] ? 2 : 1) * (game.techs[2] ? 5 : 1);
+            return (1 + (game.angelPoints * 0.1)) * techMult;
         }
 
         function getCPS() {
@@ -405,7 +267,8 @@
             if (game.money >= unit.cost) {
                 game.money -= unit.cost;
                 unit.count++;
-                unit.cost = Math.floor(unit.baseCost * Math.pow(1.17, unit.count));
+                // Sert maliyet artışı (Hardcore çarpan: 1.22)
+                unit.cost = Math.floor(unit.baseCost * Math.pow(1.22, unit.count));
                 updateUI();
             }
         }
@@ -415,8 +278,7 @@
         buySeniorBtn.addEventListener('click', () => buyUnit('senior'));
         buyScientistBtn.addEventListener('click', () => buyUnit('scientist'));
 
-        function researchTech(id) {
-            let cost = id === 1 ? 50 : 250;
+        function researchTech(id, cost) {
             if (game.techs[id] || game.techPoints < cost) return;
             game.techPoints -= cost;
             game.techs[id] = true;
@@ -437,20 +299,20 @@
         });
 
         prestigeBtn.addEventListener('click', () => {
-            let earnedPoints = Math.floor(Math.sqrt(game.totalEarned / 2000));
+            // Prestige formülü çok daha zorlaştırıldı (1 Milyon kazanç = 1 Puan)
+            let earnedPoints = Math.floor(Math.sqrt(game.totalEarned / 1000000));
             if (earnedPoints > 0) {
                 game.angelPoints += earnedPoints;
-                game.money = 0;
+                game.money = 10;
                 game.totalEarned = 0;
                 game.officeLevel = 1;
                 game.techPoints = 0;
                 game.techs = { 1: false, 2: false };
-                game.intern = { count: 0, cost: 15, baseCost: 15, income: 1 };
-                game.dev = { count: 0, cost: 100, baseCost: 100, income: 8 };
-                game.senior = { count: 0, cost: 1100, baseCost: 1100, income: 65 };
-                game.scientist = { count: 0, cost: 5000, baseCost: 5000, techIncome: 1 };
+                game.intern = { count: 0, cost: 25, baseCost: 25, income: 0.5 };
+                game.dev = { count: 0, cost: 250, baseCost: 250, income: 4 };
+                game.senior = { count: 0, cost: 3500, baseCost: 3500, income: 35 };
+                game.scientist = { count: 0, cost: 25000, baseCost: 25000, techIncome: 0.2 };
                 
-                // Teknolojileri sıfırla UI
                 document.getElementById('btn-tech-1').innerText = "Araştır";
                 document.getElementById('btn-tech-1').disabled = false;
                 document.getElementById('btn-tech-2').innerText = "Araştır";
@@ -462,8 +324,8 @@
         function updateUI() {
             moneyDisplay.innerText = `$${Math.floor(game.money).toLocaleString()}`;
             cpsDisplay.innerText = `+$${Math.floor(getCPS())}/sn`;
-            techPointsDisplay.innerText = `${Math.floor(game.techPoints)} Puan (+${getTechCPS()}/sn)`;
-            valuationDisplay.innerText = `$${Math.floor(game.money + (game.totalEarned * 0.4)).toLocaleString()}`;
+            techPointsDisplay.innerText = `${Math.floor(game.techPoints)} Puan (+${(getTechCPS()).toFixed(1)}/sn)`;
+            valuationDisplay.innerText = `$${Math.floor(game.money + (game.totalEarned * 0.3)).toLocaleString()}`;
             clickPowerVal.innerText = Math.floor(game.clickPower * offices[game.officeLevel - 1].multiplier * getMultiplier());
 
             internName.innerText = `Stajyer (${game.intern.count})`;
@@ -496,12 +358,11 @@
 
             angelPointsDisplay.innerText = game.angelPoints;
             multiplierVal.innerText = getMultiplier().toFixed(2);
-            let potentialPoints = Math.floor(Math.sqrt(game.totalEarned / 2000));
+            let potentialPoints = Math.floor(Math.sqrt(game.totalEarned / 1000000));
             prestigeBtn.innerText = `Şirketi Sat (+${potentialPoints} Yatırımcı Puanı)`;
             prestigeBtn.disabled = potentialPoints === 0;
         }
 
-        // Oyun Döngüsü
         setInterval(() => {
             let cps = getCPS();
             game.money += cps;
