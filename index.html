@@ -1,377 +1,1082 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Startup Empire - Hardcore Edition</title>
-    <style>
-        :root {
-            --bg: #090d16;
-            --card-bg: #131c2e;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --border: #1e293b;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 2rem; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: var(--text-muted); font-size: 0.85rem; }
-
-        .dashboard {
-            display: flex; gap: 15px; max-width: 1300px; width: 100%; margin-bottom: 20px; flex-wrap: wrap;
-        }
-        .stat-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; flex: 1; min-width: 200px;
-        }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
-        .stat-card .value { font-size: 1.3rem; font-weight: 700; margin-top: 3px; color: var(--success); }
-
-        .main-grid {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1300px; width: 100%;
-        }
-        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
-
-        .panel {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;
-        }
-        .panel-title {
-            font-size: 1.05rem; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .clicker-box {
-            background: linear-gradient(135deg, #1e1b4b, #312e81); border: 2px dashed #4f46e5; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; user-select: none; transition: 0.1s;
-        }
-        .clicker-box:hover { border-color: #818cf8; transform: translateY(-2px); }
-        .clicker-box:active { transform: scale(0.98); }
-
-        .action-btn {
-            background-color: var(--accent); color: white; border: none; padding: 10px 16px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; width: 100%;
-        }
-        .action-btn:hover:not(:disabled) { background-color: var(--accent-hover); }
-        .action-btn:disabled { background-color: #1e293b; color: var(--text-muted); cursor: not-allowed; border: 1px solid var(--border); }
-
-        .shop-row, .tech-row {
-            display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-        }
-        .shop-info div:first-child { font-weight: 600; font-size: 0.9rem; }
-        .shop-info div:last-child { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-        .shop-row button, .tech-row button { width: auto; padding: 6px 12px; font-size: 0.8rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090d18">
+<title>Startup Empire — Neon Edition</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#090d18;--panel:#121a2c;--line:#28334e;
+  --text:#edf2ff;--muted:#a1aec8;--accent:#8b7cff;
+  --green:#43dfab;--gold:#ffd166;--red:#ff8096;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--text);min-height:100vh;
+  background:
+    radial-gradient(ellipse at 10% 0%,#30225766,transparent 45%),
+    radial-gradient(ellipse at 95% 25%,#103c5266,transparent 40%),var(--bg);
+}
+button,input{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:not-allowed;opacity:.42}
+button:focus-visible,summary:focus-visible{
+  outline:3px solid var(--gold);outline-offset:4px;
+}
+button{
+  border:1px solid var(--line);border-radius:11px;
+  background:#202a43;color:var(--text);padding:10px 14px;
+  font-weight:700;min-height:44px;transition:background .15s,transform .15s;
+}
+button:hover:not(:disabled){background:#303e60}
+button:active:not(:disabled){transform:scale(.97)}
+.primary{background:linear-gradient(135deg,#7764ef,#a05ee8);border:0}
+.primary:hover:not(:disabled){background:linear-gradient(135deg,#8877ff,#b272f4)}
+.green{background:#174b40;color:#7ef2c9;border-color:#256a57}
+.danger{color:var(--red)}
+.wrap{max-width:1480px;margin:auto;padding:24px}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;margin-bottom:24px;flex-wrap:wrap;
+}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{
+  font-size:30px;display:grid;place-items:center;width:56px;height:56px;
+  background:linear-gradient(135deg,#7567ff,#2bc4cb);
+  border-radius:17px;box-shadow:0 8px 35px #7465ff30;
+}
+h1{font-size:clamp(1.35rem,4vw,2rem);margin:0;letter-spacing:-.04em}
+h2,h3,p{margin:0}
+.subtitle,.muted{color:var(--muted)}
+.subtitle{font-size:.8rem;margin-top:4px}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.save-dot{font-size:.75rem;color:var(--green)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{
+  padding:18px;border:1px solid var(--line);border-radius:17px;
+  background:linear-gradient(135deg,#1a2339,#11192a);
+  min-width:0;position:relative;overflow:hidden;
+}
+.stat:after{
+  content:"";position:absolute;right:-20px;top:-25px;width:85px;height:85px;
+  background:var(--accent);opacity:.06;border-radius:50%;
+}
+.label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.value{font-size:clamp(1.1rem,2.5vw,1.65rem);font-weight:800;margin:7px 0 4px}
+.subvalue{font-size:.75rem;color:var(--muted)}
+.cash{color:var(--green)}.purple{color:#bcaeff}.gold{color:var(--gold)}
+.layout{display:grid;grid-template-columns:310px minmax(0,1fr) 330px;gap:18px;align-items:start}
+.column{display:grid;gap:18px;min-width:0}
+.panel{
+  background:linear-gradient(150deg,#172035ee,#101827ee);
+  border:1px solid var(--line);border-radius:20px;padding:18px;min-width:0;
+  box-shadow:0 12px 35px #00000015;
+}
+.panel-head{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin-bottom:16px;
+}
+.panel-head h2{font-size:1rem}
+.tag{
+  font-size:.7rem;padding:5px 8px;border-radius:7px;
+  background:#8878ff20;color:#c6bdff;white-space:nowrap;
+}
+.office-scene{
+  position:relative;height:150px;display:grid;place-items:center;
+  background:radial-gradient(ellipse at bottom,#6454c544,transparent 70%),#0c1324;
+  border:1px solid #3b3861;border-radius:15px;overflow:hidden;margin-bottom:14px;
+}
+.office-scene:before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(#ffffff05 1px,transparent 1px),
+    linear-gradient(90deg,#ffffff05 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.office-icon{font-size:74px;z-index:1;filter:drop-shadow(0 10px 18px #8878ff55)}
+.office-name{font-weight:800;margin-bottom:6px}
+.office-details{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:13px}
+.full{width:100%}
+.clicker{
+  position:relative;overflow:hidden;width:100%;padding:22px 12px;margin-top:14px;
+  background:linear-gradient(135deg,#242752,#423273);
+  border:1px solid #7564c6;box-shadow:inset 0 0 25px #8878ff18;
+}
+.clicker:hover:not(:disabled){background:linear-gradient(135deg,#30366c,#523d8d)}
+.clicker strong{display:block;font-size:1rem;margin-bottom:5px}
+.clicker small{color:#d2c8ff;font-weight:500}
+.float{
+  position:absolute;pointer-events:none;color:#8ef5ce;font-weight:800;
+  animation:rise .85s forwards;z-index:3;
+}
+@keyframes rise{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-65px)}}
+.progress{height:8px;background:#080f1e;border-radius:10px;overflow:hidden;margin:10px 0}
+.progress>span{
+  display:block;height:100%;width:0;
+  background:linear-gradient(90deg,#8271ff,#42d9bf);transition:width .25s;
+}
+.small{font-size:.78rem;line-height:1.6}
+.target-title{font-size:.85rem;font-weight:700;margin-bottom:5px}
+.bulk{display:flex;gap:5px}
+.bulk button{padding:6px 9px;font-size:.72rem;min-height:34px}
+.bulk button.active{background:#7867df;border-color:#a597ff}
+.list{display:grid;gap:9px}
+.item{
+  display:flex;align-items:center;gap:11px;padding:12px;
+  border:1px solid var(--line);border-radius:13px;background:#ffffff03;
+}
+.item.locked{background:#090f1b;opacity:.65}
+.item-icon{
+  flex:0 0 39px;height:39px;background:#8a7cff12;border-radius:10px;
+  display:grid;place-items:center;font-size:23px;
+}
+.item-body{flex:1;min-width:0}
+.item-title{font-size:.83rem;font-weight:750;line-height:1.4}
+.item-desc{font-size:.71rem;color:var(--muted);margin-top:3px;line-height:1.5}
+.item-price{font-size:.72rem;color:var(--gold);margin-top:3px}
+.item button{font-size:.73rem;padding:8px 10px;flex-shrink:0}
+.count{color:#bcaeff}
+.research .item{flex-wrap:wrap}
+.research .item button{margin-left:auto}
+.prestige-panel{
+  background:linear-gradient(145deg,#342251,#181d36);
+  border-color:#66508e;
+}
+.prestige-number{font-size:2.5rem;font-weight:900;color:#d3b8ff;margin:10px 0}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:.78rem;margin:8px 0}
+.achievement{
+  display:flex;gap:10px;padding:10px;border-radius:11px;
+  border:1px solid var(--line);margin-top:8px;opacity:.45;
+}
+.achievement.done{opacity:1;border-color:#327c64;background:#174a3222}
+.achievement b{font-size:.77rem;display:block}
+.achievement small{font-size:.7rem;color:var(--muted)}
+details{margin-top:18px}
+summary{cursor:pointer;font-weight:700;font-size:.85rem}
+.help{padding-top:12px;color:var(--muted);font-size:.8rem;line-height:1.8}
+footer{margin:22px 0 4px;text-align:center;color:var(--muted);font-size:.73rem}
+.toast-stack{
+  position:fixed;right:18px;bottom:18px;z-index:50;
+  display:grid;gap:9px;width:min(360px,calc(100vw - 36px));pointer-events:none;
+}
+.toast{
+  padding:13px 16px;background:#202d46;border:1px solid #526287;
+  border-radius:12px;box-shadow:0 8px 35px #0006;font-size:.82rem;
+  animation:enter .2s ease-out;
+}
+@keyframes enter{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-backdrop{
+  position:fixed;inset:0;background:#000a;backdrop-filter:blur(7px);
+  z-index:100;display:grid;place-items:center;padding:20px;
+}
+.modal-backdrop[hidden]{display:none}
+.modal{width:min(440px,100%);background:#182238;border:1px solid #645486;border-radius:20px;padding:24px}
+.modal h2{font-size:1.15rem;margin-bottom:12px}
+.modal p{font-size:.85rem;color:var(--muted);line-height:1.7;white-space:pre-line}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+@media(min-width:1250px){.sticky{position:sticky;top:18px}}
+@media(max-width:1200px){
+  .layout{grid-template-columns:290px minmax(0,1fr)}
+  .right-column{grid-column:1/-1;grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .wrap{padding:14px}
+  header{margin-bottom:16px}
+  .stats{grid-template-columns:1fr 1fr;gap:9px}
+  .stat{padding:13px}
+  .layout{grid-template-columns:1fr;gap:14px}
+  .right-column{grid-column:auto;grid-template-columns:1fr}
+  .column{gap:14px}
+  .panel{padding:16px;border-radius:17px}
+  .office-scene{height:115px}
+  .office-icon{font-size:58px}
+  .panel-head{flex-wrap:wrap}
+  .header-actions{width:100%}
+  .header-actions button{flex:1;font-size:.75rem;padding:8px}
+  .save-dot{width:100%}
+  .clicker{padding:24px 12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
 </head>
 <body>
-
-    <header>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true">⚡</div>
+      <div>
         <h1>Startup Empire</h1>
-        <div class="subtitle">Hardcore Uzun Soluklu Sürüm</div>
-    </header>
+        <div class="subtitle">NEON EDITION · Garajdan küresel imparatorluğa</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="save-dot" id="save-status">● Otomatik kayıt açık</span>
+      <button id="export-btn">↓ Kaydı indir</button>
+      <button id="import-btn">↑ Yükle</button>
+      <button id="reset-btn" class="danger">Sıfırla</button>
+    </div>
+  </header>
 
-    <div class="dashboard">
-        <div class="stat-card">
-            <div class="label">Şirket Kasası</div>
-            <div class="value" id="money-display">$0</div>
+  <section class="stats" aria-label="Şirket istatistikleri">
+    <div class="stat">
+      <div class="label">Şirket kasası</div>
+      <div class="value cash" id="money">\$0</div>
+      <div class="subvalue" id="run-earned">Bu tur: \$0</div>
+    </div>
+    <div class="stat">
+      <div class="label">Saniyelik gelir</div>
+      <div class="value purple" id="cps">\$0</div>
+      <div class="subvalue" id="production-mult">Üretim: ×1</div>
+    </div>
+    <div class="stat">
+      <div class="label">Ar-Ge puanı</div>
+      <div class="value gold" id="rp">0</div>
+      <div class="subvalue" id="rps">+0 puan/sn</div>
+    </div>
+    <div class="stat">
+      <div class="label">Şirket değerlemesi</div>
+      <div class="value" id="valuation">\$0</div>
+      <div class="subvalue" id="lifetime">Tüm zamanlar: \$0</div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <div class="column sticky">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>🏢 Merkez ofis</h2>
+          <span class="tag" id="office-level">Seviye 1 / 9</span>
         </div>
-        <div class="stat-card">
-            <div class="label">Saniye Başı Kazanç (CPS)</div>
-            <div class="value" id="cps-display" style="color: var(--accent);">+$0/sn</div>
+        <div class="office-scene">
+          <span class="office-icon" id="office-icon" aria-hidden="true">🏠</span>
         </div>
-        <div class="stat-card">
-            <div class="label">Ar-Ge Puanı</div>
-            <div class="value" id="tech-points" style="color: var(--warning);">0 Puan</div>
+        <div class="office-name" id="office-name"></div>
+        <div class="office-details" id="office-info"></div>
+        <button class="green full" id="office-btn"></button>
+        <button class="clicker" id="click-btn">
+          <strong>⌨️ Ürün geliştir</strong>
+          <small id="click-info">Her tıklama +\$1</small>
+        </button>
+        <div class="small muted" style="margin-top:10px">
+          İlk ekibini kur, pasif gelir kazan ve yeni departmanların kilidini aç.
         </div>
-        <div class="stat-card">
-            <div class="label">Şirket Değerlemesi</div>
-            <div class="value" id="valuation-display" style="color: var(--success);">$0</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>🎯 Büyüme hedefi</h2>
+          <span class="tag" id="milestone-count">0 tamamlandı</span>
         </div>
+        <div class="target-title" id="target-title"></div>
+        <div class="small muted" id="target-detail"></div>
+        <div class="progress"><span id="target-bar"></span></div>
+        <div class="small cash" id="target-bonus"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>📖 Nasıl oynanır?</h2></div>
+        <div class="small muted">
+          Personeller sürekli gelir üretir. Ofisler üretimi artırır ve yeni
+          personeller açar. Ar-Ge uzmanları araştırma puanı üretir.
+        </div>
+        <details>
+          <summary>Exit, kayıt ve denge detayları</summary>
+          <div class="help">
+            • Her personel alımında o personelin fiyatı yükselir.<br>
+            • Büyüme hedefleri bu turdaki toplam kazanca göre üretim bonusu verir.<br>
+            • Exit puanı: ⌊√(tur kazancı / 1 milyar)⌋.<br>
+            • Her kalıcı yatırımcı puanı nakit üretimine +%5 katkı sağlar.<br>
+            • Exit; kasayı, ofisi, ekibi, Ar-Ge’yi ve araştırmaları sıfırlar.
+            Başarımlar ve kalıcı geliştirmeler korunur.<br>
+            • Harcanan yatırım puanları, toplam yatırımcı bonusunu azaltmaz.<br>
+            • Çevrimdışı kazanç en fazla 8 saat üzerinden hesaplanır.
+            Başlangıçta normal üretimin %50’sini kazandırır.<br>
+            • Kayıt bu tarayıcıda tutulur. Tarayıcı verilerini silmeden önce
+            kaydını indir.<br>
+            • Aynı kaydı birden fazla sekmede açık tutmaman önerilir.
+          </div>
+        </details>
+      </section>
     </div>
 
-    <div class="main-grid">
-        <!-- Sol Kolon -->
-        <div class="panel">
-            <div class="panel-title">
-                <span id="office-title">🏠 Garaj Ofis</span>
-                <span style="font-size: 0.8rem; color: var(--accent);">Seviye <span id="office-level">1</span></span>
-            </div>
-            
-            <div class="clicker-box" id="click-btn">
-                <div style="font-size: 1rem; font-weight: bold; margin-bottom: 3px;">💻 Kod Satırı Yaz</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">Tıklama: +<span id="click-power-val">1</span>$</div>
-            </div>
-
-            <button class="action-btn" id="upgrade-office-btn" style="background-color: var(--success);">Ofisi Büyüt</button>
-
-            <div class="panel-title" style="margin-top: 10px;">Teknoloji Araştırmaları</div>
-            <div class="tech-row">
-                <div class="shop-info">
-                    <div>Bulut Altyapısı (x2 Çarpan)</div>
-                    <div>Maliyet: 500 Ar-Ge Puanı</div>
-                </div>
-                <button class="action-btn" id="btn-tech-1" onclick="researchTech(1, 500)">Araştır</button>
-            </div>
-            <div class="tech-row">
-                <div class="shop-info">
-                    <div>Yapay Zeka Motoru (x5 Çarpan)</div>
-                    <div>Maliyet: 5,000 Ar-Ge Puanı</div>
-                </div>
-                <button class="action-btn" id="btn-tech-2" onclick="researchTech(2, 5000)">Araştır</button>
-            </div>
+    <div class="column">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>👥 Departmanlar ve ekip</h2>
+          <div class="bulk" aria-label="Satın alma miktarı">
+            <button data-bulk="1" class="active">×1</button>
+            <button data-bulk="10">×10</button>
+            <button data-bulk="25">×25</button>
+            <button data-bulk="max">MAX</button>
+          </div>
         </div>
-
-        <!-- Orta Kolon -->
-        <div class="panel">
-            <div class="panel-title">Departmanlar & Ekip</div>
-            
-            <div class="shop-row">
-                <div class="shop-info">
-                    <div id="intern-name">Stajyer (0)</div>
-                    <div>Maliyet: <span id="intern-cost">25</span>$ | +0.5$/sn</div>
-                </div>
-                <button class="action-btn" id="buy-intern">İşe Al</button>
-            </div>
-
-            <div class="shop-row">
-                <div class="shop-info">
-                    <div id="dev-name">Junior Yazılımcı (0)</div>
-                    <div>Maliyet: <span id="dev-cost">250</span>$ | +4$/sn</div>
-                </div>
-                <button class="action-btn" id="buy-dev">İşe Al</button>
-            </div>
-
-            <div class="shop-row">
-                <div class="shop-info">
-                    <div id="senior-name">Senior Architect (0)</div>
-                    <div>Maliyet: <span id="senior-cost">3500</span>$ | +35$/sn</div>
-                </div>
-                <button class="action-btn" id="buy-senior">İşe Al</button>
-            </div>
-
-            <div class="shop-row">
-                <div class="shop-info">
-                    <div id="scientist-name">AR-GE Uzmanı (0)</div>
-                    <div>Maliyet: <span id="scientist-cost">25000</span>$ | +0.2 Ar-Ge/sn</div>
-                </div>
-                <button class="action-btn" id="buy-scientist" style="background-color: var(--warning);">İşe Al</button>
-            </div>
+        <div class="list" id="units"></div>
+        <div class="small muted" style="margin-top:12px">
+          Toplu alım, seçilen miktara kadar bütçenin yettiği personeli alır.
+          MAX tek işlemde en fazla 1.000 personel alır.
         </div>
+      </section>
 
-        <!-- Sağ Kolon -->
-        <div class="panel" style="background: linear-gradient(135deg, #2e1065, #4c1d95); border-color: #7c3aed;">
-            <div class="panel-title" style="border-color: #7c3aed;">
-                <span>🚀 Melek Yatırım / Exit</span>
-                <span style="font-size: 0.8rem; color: #c084fc;">Puan: <span id="angel-points">0</span></span>
-            </div>
-            <div style="font-size: 0.85rem; color: #ddd6fe; line-height: 1.4;">
-                Zirveye ulaşıp Exit yap! Yatırımcı puanı elde etmek artık çok daha zor ve değerli.
-            </div>
-            <div style="font-size: 0.85rem; color: #f3e8ff;">Mevcut Çarpan: x<span id="multiplier-val">1.0</span></div>
-            <button class="action-btn" id="prestige-btn" style="background-color: #7c3aed; margin-top: auto;">Şirketi Sat (Exit Yap)</button>
+      <section class="panel research">
+        <div class="panel-head">
+          <h2>🧪 Araştırma laboratuvarı</h2>
+          <span class="tag">Ar-Ge ile geliştir</span>
         </div>
+        <div class="list" id="research"></div>
+      </section>
     </div>
 
-    <script>
-        let game = {
-            money: 10,
-            totalEarned: 0,
-            clickPower: 1,
-            angelPoints: 0,
-            officeLevel: 1,
-            techPoints: 0,
-            techs: { 1: false, 2: false },
-            intern: { count: 0, cost: 25, baseCost: 25, income: 0.5 },
-            dev: { count: 0, cost: 250, baseCost: 250, income: 4 },
-            senior: { count: 0, cost: 3500, baseCost: 3500, income: 35 },
-            scientist: { count: 0, cost: 25000, baseCost: 25000, techIncome: 0.2 }
-        };
+    <div class="column right-column">
+      <section class="panel prestige-panel">
+        <div class="panel-head">
+          <h2>🚀 Exit ve yatırım</h2>
+          <span class="tag" id="exit-count">0 Exit</span>
+        </div>
+        <div class="small muted">Toplam yatırımcı puanı</div>
+        <div class="prestige-number" id="angels">0</div>
+        <div class="kv"><span>Harcanabilir puan</span><b id="bank">0</b></div>
+        <div class="kv"><span>Kalıcı yatırımcı çarpanı</span><b id="angel-mult">×1</b></div>
+        <div class="progress"><span id="exit-bar"></span></div>
+        <div class="small muted" id="exit-next"></div>
+        <button class="primary full" id="exit-btn" style="margin-top:14px">Exit yap</button>
+        <div class="small muted" style="margin-top:10px">
+          Yeni bir başlangıç, daha güçlü bir şirket.
+          Araştırmaların sıfırlanacağını unutma.
+        </div>
+        <div style="height:1px;background:#ffffff14;margin:18px 0"></div>
+        <div class="panel-head"><h2>💎 Kalıcı geliştirmeler</h2></div>
+        <div class="list" id="investments"></div>
+      </section>
 
-        const offices = [
-            { name: "🏠 Garaj Ofis", cost: 0, multiplier: 1 },
-            { name: "🏢 Kuluçka Merkezi", cost: 10000, multiplier: 2 },
-            { name: "🏙️ Plaza Katı", cost: 250000, multiplier: 4 },
-            { name: "🚀 Silikon Vadisi Kampüsü", cost: 5000000, multiplier: 10 },
-            { name: "🌐 Küresel Teknoloji Devi", cost: 100000000, multiplier: 25 }
-        ];
+      <section class="panel">
+        <div class="panel-head">
+          <h2>🏆 Başarımlar</h2>
+          <span class="tag" id="achievement-count">0 / 8</span>
+        </div>
+        <div class="small muted">
+          Her başarım, tüm şirketlerinde kalıcı +%2 nakit üretimi sağlar.
+        </div>
+        <div id="achievements"></div>
+      </section>
+    </div>
+  </main>
 
-        const moneyDisplay = document.getElementById('money-display');
-        const cpsDisplay = document.getElementById('cps-display');
-        const techPointsDisplay = document.getElementById('tech-points');
-        const valuationDisplay = document.getElementById('valuation-display');
-        const clickBtn = document.getElementById('click-btn');
-        const clickPowerVal = document.getElementById('click-power-val');
-        
-        const upgradeOfficeBtn = document.getElementById('upgrade-office-btn');
-        const officeTitle = document.getElementById('office-title');
-        const officeLevel = document.getElementById('office-level');
+  <footer>
+    Sonsuz büyüme döngüsü · Otomatik kayıt: 10 saniye · Çevrimdışı sınır: 8 saat
+  </footer>
+</div>
 
-        const buyInternBtn = document.getElementById('buy-intern');
-        const internName = document.getElementById('intern-name');
-        const internCost = document.getElementById('intern-cost');
+<input type="file" id="import-file" accept=".json,application/json" hidden>
+<div class="toast-stack" id="toasts" role="status" aria-live="polite"></div>
 
-        const buyDevBtn = document.getElementById('buy-dev');
-        const devName = document.getElementById('dev-name');
-        const devCost = document.getElementById('dev-cost');
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <section class="modal" role="dialog" aria-modal="true"
+    aria-labelledby="modal-title" aria-describedby="modal-text">
+    <h2 id="modal-title"></h2>
+    <p id="modal-text"></p>
+    <div class="modal-actions">
+      <button id="modal-cancel">Vazgeç</button>
+      <button id="modal-ok" class="primary">Onayla</button>
+    </div>
+  </section>
+</div>
 
-        const buySeniorBtn = document.getElementById('buy-senior');
-        const seniorName = document.getElementById('senior-name');
-        const seniorCost = document.getElementById('senior-cost');
+<script>
+"use strict";
 
-        const buyScientistBtn = document.getElementById('buy-scientist');
-        const scientistName = document.getElementById('scientist-name');
-        const scientistCost = document.getElementById('scientist-cost');
+const SAVE_KEY = "startup-empire-neon-v1";
+const VERSION = 1;
+const LIMIT = 1e250;
+const OFFLINE_LIMIT = 8 * 60 * 60;
+const PRESTIGE_BASE = 1e9;
 
-        const angelPointsDisplay = document.getElementById('angel-points');
-        const multiplierVal = document.getElementById('multiplier-val');
-        const prestigeBtn = document.getElementById('prestige-btn');
+const OFFICES = [
+  {name:"Garaj Ofis", icon:"🏠", cost:0, mult:1},
+  {name:"Kuluçka Merkezi", icon:"🏢", cost:2500, mult:1.6},
+  {name:"Şehir Stüdyosu", icon:"🌆", cost:75000, mult:2.7},
+  {name:"Plaza Merkezi", icon:"🏙️", cost:2e6, mult:5},
+  {name:"Teknoloji Kampüsü", icon:"🏗️", cost:8e7, mult:10},
+  {name:"Silikon Vadisi Üssü", icon:"🚀", cost:3e9, mult:22},
+  {name:"Küresel Genel Merkez", icon:"🌍", cost:2e11, mult:50},
+  {name:"Yapay Zeka Megakenti", icon:"🌐", cost:2e13, mult:120},
+  {name:"Yörünge Teknoloji Üssü", icon:"🛰️", cost:5e15, mult:300}
+];
 
-        function getMultiplier() {
-            let techMult = (game.techs[1] ? 2 : 1) * (game.techs[2] ? 5 : 1);
-            return (1 + (game.angelPoints * 0.1)) * techMult;
-        }
+const UNITS = [
+  {name:"Stajyer", icon:"🧑‍💻", cost:15, growth:1.18, cash:.3, rp:0, office:1},
+  {name:"Junior Yazılımcı", icon:"💻", cost:200, growth:1.19, cash:3, rp:0, office:1},
+  {name:"Senior Mimar", icon:"🧠", cost:5000, growth:1.20, cash:45, rp:0, office:2},
+  {name:"Ürün Ekibi", icon:"🎨", cost:60000, growth:1.20, cash:320, rp:0, office:3},
+  {name:"Ar-Ge Uzmanı", icon:"🧪", cost:150000, growth:1.21, cash:400, rp:.25, office:3},
+  {name:"Büyüme Departmanı", icon:"📈", cost:3e6, growth:1.21, cash:8000, rp:0, office:4},
+  {name:"Veri Merkezi", icon:"🖥️", cost:1e8, growth:1.22, cash:180000, rp:1, office:5},
+  {name:"Kuantum Laboratuvarı", icon:"⚛️", cost:8e9, growth:1.22, cash:7e6, rp:8, office:6},
+  {name:"Küresel AI Ağı", icon:"🌐", cost:5e13, growth:1.23, cash:8e9, rp:150, office:8}
+];
 
-        function getCPS() {
-            let baseCPS = (game.intern.count * game.intern.income) + 
-                          (game.dev.count * game.dev.income) + 
-                          (game.senior.count * game.senior.income);
-            let officeMult = offices[game.officeLevel - 1].multiplier;
-            return baseCPS * officeMult * getMultiplier();
-        }
+const TECHS = [
+  {name:"Bulut Altyapısı", icon:"☁️", cost:80, growth:1, max:1, office:3,
+   desc:"Tüm nakit üretimi ×2.", type:"cloud"},
+  {name:"Yapay Zeka Motoru", icon:"🤖", cost:1200, growth:1, max:1, office:4,
+   desc:"Tüm nakit üretimi ×3.", type:"ai"},
+  {name:"Otomatik Kodlama", icon:"⌨️", cost:500, growth:1, max:1, office:3,
+   desc:"Saniyede 1 otomatik tıklama geliri.", type:"auto"},
+  {name:"Kuantum İşleme", icon:"⚛️", cost:20000, growth:1, max:1, office:6,
+   desc:"Tüm nakit üretimi ×5.", type:"quantum"},
+  {name:"Performans Optimizasyonu", icon:"⚡", cost:50, growth:1.7, max:2000, office:3,
+   desc:"Seviye başına +%10 nakit üretimi. Tekrarlanabilir.", type:"production"},
+  {name:"Geliştirici Araçları", icon:"🛠️", cost:30, growth:1.65, max:2000, office:3,
+   desc:"Seviye başına +%40 tıklama gücü. Tekrarlanabilir.", type:"click"},
+  {name:"Bilimsel Metodoloji", icon:"🔬", cost:60, growth:1.85, max:2000, office:3,
+   desc:"Seviye başına +%20 Ar-Ge üretimi. Tekrarlanabilir.", type:"science"}
+];
 
-        function getTechCPS() {
-            return game.scientist.count * game.scientist.techIncome;
-        }
+const INVESTMENTS = [
+  {key:"income", name:"Yatırım Ağı", icon:"💼", base:1, max:20,
+   desc:"Seviye başına kalıcı +%15 nakit üretimi."},
+  {key:"click", name:"Kurucu Deneyimi", icon:"👑", base:1, max:20,
+   desc:"Seviye başına kalıcı +%25 tıklama gücü."},
+  {key:"science", name:"Bilim Vakfı", icon:"🧬", base:2, max:20,
+   desc:"Seviye başına kalıcı +%20 Ar-Ge üretimi."},
+  {key:"offline", name:"Otonom Operasyon", icon:"🌙", base:2, max:5,
+   desc:"Çevrimdışı verim +10 yüzde puan; en fazla %100."}
+];
 
-        clickBtn.addEventListener('click', () => {
-            let earned = game.clickPower * offices[game.officeLevel - 1].multiplier * getMultiplier();
-            game.money += earned;
-            game.totalEarned += earned;
-            updateUI();
-        });
+const MILESTONES = [
+  1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,
+  1e13,1e14,1e15,1e16,1e18,1e20,1e23,1e26,1e30,
+  1e35,1e40,1e50,1e65,1e80,1e100,1e125,1e150,1e200
+];
 
-        function buyUnit(unitKey) {
-            let unit = game[unitKey];
-            if (game.money >= unit.cost) {
-                game.money -= unit.cost;
-                unit.count++;
-                // Sert maliyet artışı (Hardcore çarpan: 1.22)
-                unit.cost = Math.floor(unit.baseCost * Math.pow(1.22, unit.count));
-                updateUI();
-            }
-        }
+const ACHIEVEMENTS = [
+  {id:"click100", name:"İlk Sprint", desc:"100 kez ürün geliştir.", icon:"⌨️",
+   test:s=>s.clicks>=100},
+  {id:"team10", name:"Gerçek Bir Ekip", desc:"Aynı anda 10 personel sahibi ol.", icon:"👥",
+   test:s=>s.units.reduce((a,b)=>a+b,0)>=10},
+  {id:"million", name:"İlk Milyon", desc:"Tüm zamanlarda \$1 milyon kazan.", icon:"💰",
+   test:s=>s.lifetime>=1e6},
+  {id:"research", name:"Bilimsel Atılım", desc:"Bir araştırma tamamla.", icon:"🧪",
+   test:s=>s.tech.some(x=>x>0)},
+  {id:"office5", name:"Kampüs Hayatı", desc:"5. ofise ulaş.", icon:"🏗️",
+   test:s=>s.office>=5},
+  {id:"exit1", name:"Başarılı Exit", desc:"İlk şirketini sat.", icon:"🚀",
+   test:s=>s.exits>=1},
+  {id:"trillion", name:"Trilyon Kulübü", desc:"Tüm zamanlarda \$1 trilyon kazan.", icon:"🌍",
+   test:s=>s.lifetime>=1e12},
+  {id:"exit10", name:"Seri Girişimci", desc:"10 kez Exit yap.", icon:"👑",
+   test:s=>s.exits>=10}
+];
 
-        buyInternBtn.addEventListener('click', () => buyUnit('intern'));
-        buyDevBtn.addEventListener('click', () => buyUnit('dev'));
-        buySeniorBtn.addEventListener('click', () => buyUnit('senior'));
-        buyScientistBtn.addEventListener('click', () => buyUnit('scientist'));
+const $ = id => document.getElementById(id);
+const fmtNormal = new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2});
+const fmtCompact = new Intl.NumberFormat("tr-TR",{
+  notation:"compact",maximumFractionDigits:2
+});
+function fmt(n){
+  if(!Number.isFinite(n)) return "Limit";
+  if(n>=1e15) return n.toExponential(2).replace(".",",");
+  return (n>=1e6 ? fmtCompact : fmtNormal).format(n);
+}
+const cash = n => "$"+fmt(n);
+const bounded = n => Math.min(LIMIT,Math.max(0,Number.isFinite(n)?n:LIMIT));
+const scaledCost = (base,growth,level) =>
+  Math.max(1,Math.floor(bounded(base*Math.pow(growth,level))));
 
-        function researchTech(id, cost) {
-            if (game.techs[id] || game.techPoints < cost) return;
-            game.techPoints -= cost;
-            game.techs[id] = true;
-            document.getElementById(`btn-tech-${id}`).innerText = "Araştırıldı";
-            document.getElementById(`btn-tech-${id}`).disabled = true;
-            updateUI();
-        }
+function fresh(){
+  return {
+    money:30,run:0,lifetime:0,rp:0,office:1,
+    units:UNITS.map(()=>0),tech:TECHS.map(()=>0),
+    angels:0,bank:0,exits:0,clicks:0,
+    upgrades:{income:0,click:0,science:0,offline:0},
+    achievements:[],played:0
+  };
+}
 
-        upgradeOfficeBtn.addEventListener('click', () => {
-            if (game.officeLevel < offices.length) {
-                let nextOffice = offices[game.officeLevel];
-                if (game.money >= nextOffice.cost) {
-                    game.money -= nextOffice.cost;
-                    game.officeLevel++;
-                    updateUI();
-                }
-            }
-        });
+let game = fresh();
+let bulk = "1";
+let storageWorks = true;
+let lastWall = Date.now();
+let lastRender = 0;
+let lastSave = Date.now();
+let modalResolve = null;
+let previousFocus = null;
 
-        prestigeBtn.addEventListener('click', () => {
-            // Prestige formülü çok daha zorlaştırıldı (1 Milyon kazanç = 1 Puan)
-            let earnedPoints = Math.floor(Math.sqrt(game.totalEarned / 1000000));
-            if (earnedPoints > 0) {
-                game.angelPoints += earnedPoints;
-                game.money = 10;
-                game.totalEarned = 0;
-                game.officeLevel = 1;
-                game.techPoints = 0;
-                game.techs = { 1: false, 2: false };
-                game.intern = { count: 0, cost: 25, baseCost: 25, income: 0.5 };
-                game.dev = { count: 0, cost: 250, baseCost: 250, income: 4 };
-                game.senior = { count: 0, cost: 3500, baseCost: 3500, income: 35 };
-                game.scientist = { count: 0, cost: 25000, baseCost: 25000, techIncome: 0.2 };
-                
-                document.getElementById('btn-tech-1').innerText = "Araştır";
-                document.getElementById('btn-tech-1').disabled = false;
-                document.getElementById('btn-tech-2').innerText = "Araştır";
-                document.getElementById('btn-tech-2').disabled = false;
-                updateUI();
-            }
-        });
+function toast(message){
+  const node=document.createElement("div");
+  node.className="toast";
+  node.textContent=message;
+  $("toasts").appendChild(node);
+  setTimeout(()=>node.remove(),5500);
+  while($("toasts").children.length>4) $("toasts").firstChild.remove();
+}
 
-        function updateUI() {
-            moneyDisplay.innerText = `$${Math.floor(game.money).toLocaleString()}`;
-            cpsDisplay.innerText = `+$${Math.floor(getCPS())}/sn`;
-            techPointsDisplay.innerText = `${Math.floor(game.techPoints)} Puan (+${(getTechCPS()).toFixed(1)}/sn)`;
-            valuationDisplay.innerText = `$${Math.floor(game.money + (game.totalEarned * 0.3)).toLocaleString()}`;
-            clickPowerVal.innerText = Math.floor(game.clickPower * offices[game.officeLevel - 1].multiplier * getMultiplier());
+function milestoneCount(){
+  return MILESTONES.filter(x=>game.run>=x).length;
+}
+function techLevel(type){
+  return game.tech[TECHS.findIndex(t=>t.type===type)] || 0;
+}
+function productionMultiplier(){
+  return bounded(
+    OFFICES[game.office-1].mult *
+    (1+game.angels*.05) *
+    (1+game.upgrades.income*.15) *
+    (1+game.achievements.length*.02) *
+    (1+milestoneCount()*.08) *
+    (techLevel("cloud")?2:1) *
+    (techLevel("ai")?3:1) *
+    (techLevel("quantum")?5:1) *
+    (1+techLevel("production")*.1)
+  );
+}
+function clickPower(){
+  return bounded(productionMultiplier()*
+    (1+game.upgrades.click*.25)*(1+techLevel("click")*.4));
+}
+function cps(){
+  const base=UNITS.reduce((sum,u,i)=>sum+game.units[i]*u.cash,0);
+  return bounded(base*productionMultiplier()+
+    (techLevel("auto")?clickPower():0));
+}
+function rps(){
+  const base=UNITS.reduce((sum,u,i)=>sum+game.units[i]*u.rp,0);
+  return bounded(base*Math.sqrt(OFFICES[game.office-1].mult)*
+    (1+game.upgrades.science*.2)*(1+techLevel("science")*.2)*
+    (1+game.angels*.01));
+}
+function offlineEfficiency(){
+  return Math.min(1,.5+game.upgrades.offline*.1);
+}
+function prestigeReward(){
+  return Math.floor(Math.sqrt(game.run/PRESTIGE_BASE));
+}
+function unitCost(i,count=game.units[i]){
+  return scaledCost(UNITS[i].cost,UNITS[i].growth,count);
+}
+function techCost(i){
+  return scaledCost(TECHS[i].cost,TECHS[i].growth,game.tech[i]);
+}
+function investmentCost(i){
+  const u=INVESTMENTS[i];
+  return Math.ceil(u.base*Math.pow(1.65,game.upgrades[u.key]));
+}
 
-            internName.innerText = `Stajyer (${game.intern.count})`;
-            internCost.innerText = game.intern.cost.toLocaleString();
-            buyInternBtn.disabled = game.money < game.intern.cost;
+function checkAchievements(announce=true){
+  for(const a of ACHIEVEMENTS){
+    if(!game.achievements.includes(a.id)&&a.test(game)){
+      game.achievements.push(a.id);
+      if(announce) toast("🏆 Başarım: "+a.name+" · Kalıcı +%2 üretim");
+    }
+  }
+}
+function earn(amount){
+  const old=milestoneCount();
+  amount=bounded(amount);
+  game.money=bounded(game.money+amount);
+  game.run=bounded(game.run+amount);
+  game.lifetime=bounded(game.lifetime+amount);
+  const now=milestoneCount();
+  if(now>old) toast("🎯 Büyüme hedefi tamamlandı! Tur üretim bonusu arttı.");
+}
+function simulate(seconds,efficiency=1){
+  if(seconds<=0) return;
+  // Gelirler aynı zaman aralığının başlangıç oranıyla hesaplanır.
+  const income=cps()*seconds*efficiency;
+  const research=rps()*seconds*efficiency;
+  earn(income);
+  game.rp=bounded(game.rp+research);
+  game.played=bounded(game.played+seconds);
+  checkAchievements();
+}
+function advance(now=Date.now()){
+  if(document.hidden) return;
+  const seconds=Math.max(0,(now-lastWall)/1000);
+  lastWall=now;
+  // Uzun tarayıcı askıya alınmalarında çevrimdışı kuralı uygulanır.
+  if(seconds>30) applyOffline(seconds);
+  else simulate(seconds);
+}
+function applyOffline(seconds){
+  const elapsed=Math.min(OFFLINE_LIMIT,Math.max(0,seconds));
+  if(elapsed<1) return;
+  const moneyBefore=game.money;
+  const rpBefore=game.rp;
+  simulate(elapsed,offlineEfficiency());
+  if(game.money>moneyBefore||game.rp>rpBefore){
+    toast("🌙 Çevrimdışı kazanç: +"+cash(game.money-moneyBefore)+
+      " ve +"+fmt(game.rp-rpBefore)+" Ar-Ge ("+
+      fmt(elapsed/60)+" dk, %"+Math.round(offlineEfficiency()*100)+" verim)");
+  }
+}
 
-            devName.innerText = `Junior Yazılımcı (${game.dev.count})`;
-            devCost.innerText = game.dev.cost.toLocaleString();
-            buyDevBtn.disabled = game.money < game.dev.cost;
+function save(){
+  try{
+    localStorage.setItem(SAVE_KEY,JSON.stringify({
+      version:VERSION,savedAt:Date.now(),game
+    }));
+    storageWorks=true;
+    $("save-status").textContent="● Kaydedildi · "+
+      new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+  }catch{
+    storageWorks=false;
+    $("save-status").textContent="⚠ Kayıt kullanılamıyor — kaydı indir";
+  }
+  lastSave=Date.now();
+}
 
-            seniorName.innerText = `Senior Architect (${game.senior.count})`;
-            seniorCost.innerText = game.senior.cost.toLocaleString();
-            buySeniorBtn.disabled = game.money < game.senior.cost;
+// İçe aktarılan veriyi doğrudan oyun nesnesine birleştirmiyoruz.
+function validate(payload){
+  if(!payload||payload.version!==VERSION||!payload.game){
+    throw new Error("Desteklenmeyen kayıt dosyası.");
+  }
+  const raw=payload.game;
+  const s=fresh();
+  function number(value,max=LIMIT,integer=false){
+    if(typeof value!=="number"||!Number.isFinite(value)||value<0||value>max||
+      (integer&&!Number.isInteger(value))){
+      throw new Error("Kayıt dosyasında geçersiz değer var.");
+    }
+    return value;
+  }
+  for(const key of ["money","run","lifetime","rp","played"]){
+    s[key]=number(raw[key]);
+  }
+  for(const key of ["angels","bank","exits","clicks"]){
+    s[key]=number(raw[key],Number.MAX_SAFE_INTEGER,true);
+  }
+  s.office=number(raw.office,OFFICES.length,true);
+  if(s.office<1||s.bank>s.angels||s.lifetime<s.run){
+    throw new Error("Kayıt değerleri tutarsız.");
+  }
+  if(!Array.isArray(raw.units)||raw.units.length!==UNITS.length||
+     !Array.isArray(raw.tech)||raw.tech.length!==TECHS.length){
+    throw new Error("Ekip veya araştırma verisi geçersiz.");
+  }
+  s.units=raw.units.map(n=>number(n,100000,true));
+  s.tech=raw.tech.map((n,i)=>number(n,TECHS[i].max,true));
+  if(!raw.upgrades||!Array.isArray(raw.achievements)){
+    throw new Error("Kalıcı ilerleme verisi eksik.");
+  }
+  for(const u of INVESTMENTS){
+    s.upgrades[u.key]=number(raw.upgrades[u.key],u.max,true);
+  }
+  const known=new Set(ACHIEVEMENTS.map(a=>a.id));
+  s.achievements=[...new Set(raw.achievements.filter(id=>known.has(id)))];
+  const savedAt=number(payload.savedAt,8.64e15);
+  return {state:s,savedAt};
+}
+function load(){
+  try{
+    const text=localStorage.getItem(SAVE_KEY);
+    if(!text) return;
+    const loaded=validate(JSON.parse(text));
+    game=loaded.state;
+    checkAchievements(false);
+    applyOffline(Math.max(0,(Date.now()-loaded.savedAt)/1000));
+    // Kazanç hemen kaydedilir; yenilemeyle tekrar alınamaz.
+    save();
+  }catch{
+    toast("⚠ Kayıt okunamadı. Yeni oyun açıldı; varsa yedek dosyanı yükleyebilirsin.");
+  }
+}
 
-            scientistName.innerText = `AR-GE Uzmanı (${game.scientist.count})`;
-            scientistCost.innerText = game.scientist.cost.toLocaleString();
-            buyScientistBtn.disabled = game.money < game.scientist.cost;
+function confirmDialog(title,text,ok="Onayla"){
+  if(modalResolve) return Promise.resolve(false);
+  previousFocus=document.activeElement;
+  $("modal-title").textContent=title;
+  $("modal-text").textContent=text;
+  $("modal-ok").textContent=ok;
+  $("modal-backdrop").hidden=false;
+  $("modal-cancel").focus();
+  return new Promise(resolve=>modalResolve=resolve);
+}
+function closeDialog(value){
+  if(!modalResolve) return;
+  const resolve=modalResolve;
+  modalResolve=null;
+  $("modal-backdrop").hidden=true;
+  if(previousFocus?.isConnected) previousFocus.focus();
+  resolve(value);
+}
+$("modal-cancel").onclick=()=>closeDialog(false);
+$("modal-ok").onclick=()=>closeDialog(true);
+$("modal-backdrop").onclick=e=>{
+  if(e.target===$("modal-backdrop")) closeDialog(false);
+};
+document.addEventListener("keydown",e=>{
+  if(!modalResolve) return;
+  if(e.key==="Escape") closeDialog(false);
+  if(e.key==="Tab"){
+    const first=$("modal-cancel"),last=$("modal-ok");
+    if(e.shiftKey&&document.activeElement===first){
+      e.preventDefault();last.focus();
+    }else if(!e.shiftKey&&document.activeElement===last){
+      e.preventDefault();first.focus();
+    }
+  }
+});
 
-            officeTitle.innerText = offices[game.officeLevel - 1].name;
-            officeLevel.innerText = game.officeLevel;
+function buyPlan(i){
+  const max=bulk==="max"?1000:Number(bulk);
+  let count=0,total=0;
+  while(count<max&&game.units[i]+count<100000){
+    const cost=unitCost(i,game.units[i]+count);
+    if(total+cost>game.money) break;
+    total+=cost;count++;
+  }
+  return {count,total};
+}
 
-            if (game.officeLevel < offices.length) {
-                let nextOffice = offices[game.officeLevel];
-                upgradeOfficeBtn.innerText = `Ofisi Büyüt: ${nextOffice.name} ($${nextOffice.cost.toLocaleString()})`;
-                upgradeOfficeBtn.disabled = game.money < nextOffice.cost;
-                upgradeOfficeBtn.style.display = "block";
-            } else {
-                upgradeOfficeBtn.style.display = "none";
-            }
+function mount(){
+  $("units").innerHTML=UNITS.map((u,i)=>`
+    <div class="item" id="unit-${i}">
+      <div class="item-icon" aria-hidden="true">${u.icon}</div>
+      <div class="item-body">
+        <div class="item-title">${u.name} <span class="count" id="unit-count-${i}"></span></div>
+        <div class="item-desc" id="unit-desc-${i}"></div>
+        <div class="item-price" id="unit-price-${i}"></div>
+      </div>
+      <button id="unit-buy-${i}" aria-label="${u.name} satın al">Al</button>
+    </div>`).join("");
 
-            angelPointsDisplay.innerText = game.angelPoints;
-            multiplierVal.innerText = getMultiplier().toFixed(2);
-            let potentialPoints = Math.floor(Math.sqrt(game.totalEarned / 1000000));
-            prestigeBtn.innerText = `Şirketi Sat (+${potentialPoints} Yatırımcı Puanı)`;
-            prestigeBtn.disabled = potentialPoints === 0;
-        }
+  $("research").innerHTML=TECHS.map((t,i)=>`
+    <div class="item" id="tech-${i}">
+      <div class="item-icon" aria-hidden="true">${t.icon}</div>
+      <div class="item-body">
+        <div class="item-title">${t.name} <span class="count" id="tech-level-${i}"></span></div>
+        <div class="item-desc">${t.desc}</div>
+        <div class="item-price" id="tech-price-${i}"></div>
+      </div>
+      <button id="tech-buy-${i}" aria-label="${t.name} araştır">Araştır</button>
+    </div>`).join("");
 
-        setInterval(() => {
-            let cps = getCPS();
-            game.money += cps;
-            game.totalEarned += cps;
-            game.techPoints += getTechCPS();
-            updateUI();
-        }, 1000);
+  $("investments").innerHTML=INVESTMENTS.map((u,i)=>`
+    <div class="item">
+      <div class="item-body">
+        <div class="item-title">${u.icon} ${u.name}
+          <span class="count" id="upgrade-level-${i}"></span>
+        </div>
+        <div class="item-desc">${u.desc}</div>
+        <div class="item-price" id="upgrade-price-${i}"></div>
+      </div>
+      <button id="upgrade-buy-${i}" aria-label="${u.name} geliştir">Geliştir</button>
+    </div>`).join("");
 
-        updateUI();
-    </script>
+  $("achievements").innerHTML=ACHIEVEMENTS.map(a=>`
+    <div class="achievement" id="achievement-${a.id}">
+      <span aria-hidden="true">${a.icon}</span>
+      <div><b>${a.name}</b><small>${a.desc}</small></div>
+    </div>`).join("");
+
+  UNITS.forEach((u,i)=>{
+    $("unit-buy-"+i).onclick=()=>{
+      advance();
+      if(game.office<u.office) return;
+      const plan=buyPlan(i);
+      if(!plan.count) return;
+      game.money=Math.max(0,game.money-plan.total);
+      game.units[i]+=plan.count;
+      checkAchievements();
+      render();save();
+      if(plan.count>1) toast(u.icon+" "+plan.count+" "+u.name+" alındı.");
+    };
+  });
+
+  TECHS.forEach((t,i)=>{
+    $("tech-buy-"+i).onclick=()=>{
+      advance();
+      const cost=techCost(i);
+      if(game.office<t.office||game.tech[i]>=t.max||game.rp<cost) return;
+      game.rp=Math.max(0,game.rp-cost);
+      game.tech[i]++;
+      checkAchievements();
+      toast(t.icon+" "+t.name+" geliştirildi.");
+      render();save();
+    };
+  });
+
+  INVESTMENTS.forEach((u,i)=>{
+    $("upgrade-buy-"+i).onclick=()=>{
+      advance();
+      const cost=investmentCost(i);
+      if(game.upgrades[u.key]>=u.max||game.bank<cost) return;
+      game.bank-=cost;
+      game.upgrades[u.key]++;
+      toast("💎 "+u.name+" kalıcı olarak geliştirildi.");
+      render();save();
+    };
+  });
+}
+
+function render(){
+  $("money").textContent=cash(game.money);
+  $("run-earned").textContent="Bu tur: "+cash(game.run);
+  $("cps").textContent=cash(cps())+"/sn";
+  $("production-mult").textContent="Üretim: ×"+fmt(productionMultiplier());
+  $("rp").textContent=fmt(game.rp);
+  $("rps").textContent="+"+fmt(rps())+" puan/sn";
+  // Değerleme bir gösterge; Exit hesabı tur kazancını kullanır.
+  const assets=UNITS.reduce((sum,u,i)=>sum+game.units[i]*u.cost,0);
+  $("valuation").textContent=cash(bounded(game.money+assets+game.run*.25));
+  $("lifetime").textContent="Tüm zamanlar: "+cash(game.lifetime);
+
+  const office=OFFICES[game.office-1];
+  $("office-level").textContent="Seviye "+game.office+" / "+OFFICES.length;
+  $("office-icon").textContent=office.icon;
+  $("office-name").textContent=office.name;
+  $("office-info").textContent="Ofis üretimi ×"+fmt(office.mult)+
+    " · Toplam ekip: "+fmt(game.units.reduce((a,b)=>a+b,0));
+  $("click-info").textContent="Her tıklama +"+cash(clickPower());
+
+  const next=OFFICES[game.office];
+  $("office-btn").disabled=!next||game.money<next.cost;
+  $("office-btn").textContent=next?
+    "Yükselt · "+cash(next.cost):"✓ En yüksek ofis seviyesindesin";
+
+  UNITS.forEach((u,i)=>{
+    const locked=game.office<u.office;
+    const plan=locked?{count:0,total:0}:buyPlan(i);
+    $("unit-"+i).classList.toggle("locked",locked);
+    $("unit-count-"+i).textContent="("+fmt(game.units[i])+")";
+    $("unit-desc-"+i).textContent=locked?
+      "🔒 Ofis seviyesi "+u.office+" gerekiyor":
+      "Birim: +"+cash(u.cash*productionMultiplier())+"/sn"+
+      (u.rp?" · Temel +"+fmt(u.rp)+" Ar-Ge/sn":"");
+    $("unit-price-"+i).textContent=locked?
+      "Açılış: "+OFFICES[u.office-1].name:
+      (plan.count>1?"Toplu: "+cash(plan.total):"Sonraki: "+cash(unitCost(i)));
+    $("unit-buy-"+i).disabled=locked||plan.count===0;
+    $("unit-buy-"+i).textContent=locked?"Kilitli":
+      plan.count>1?"Al ×"+plan.count:"İşe al";
+  });
+
+  TECHS.forEach((t,i)=>{
+    const done=game.tech[i]>=t.max;
+    const locked=game.office<t.office;
+    $("tech-"+i).classList.toggle("locked",locked);
+    $("tech-level-"+i).textContent=t.max>1?"Sv. "+game.tech[i]:"";
+    $("tech-price-"+i).textContent=done?"✓ Tamamlandı":
+      locked?"🔒 Ofis seviyesi "+t.office:
+      fmt(techCost(i))+" Ar-Ge puanı";
+    $("tech-buy-"+i).disabled=done||locked||game.rp<techCost(i);
+    $("tech-buy-"+i).textContent=done?"✓":locked?"Kilitli":
+      t.max>1?"Geliştir":"Araştır";
+  });
+
+  const completed=milestoneCount();
+  const target=MILESTONES[completed];
+  $("milestone-count").textContent=completed+" tamamlandı";
+  $("target-title").textContent=target?
+    cash(target)+" tur kazancına ulaş":"Tüm büyüme hedefleri tamamlandı!";
+  $("target-detail").textContent=target?
+    cash(game.run)+" / "+cash(target):
+    "Yeni Exit’lerle imparatorluğunu büyütmeye devam et.";
+  $("target-bar").style.width=(target?Math.min(100,game.run/target*100):100)+"%";
+  $("target-bonus").textContent="Mevcut tur bonusu: +%"+completed*8+
+    (target?" · Sonraki hedef: +%8":"");
+
+  const reward=prestigeReward();
+  const nextPoint=PRESTIGE_BASE*Math.pow(reward+1,2);
+  $("angels").textContent=fmt(game.angels);
+  $("bank").textContent=fmt(game.bank);
+  $("angel-mult").textContent="×"+fmt(1+game.angels*.05);
+  $("exit-count").textContent=game.exits+" Exit";
+  $("exit-bar").style.width=Math.min(100,game.run/nextPoint*100)+"%";
+  $("exit-next").textContent="Sonraki puan eşiği: "+cash(nextPoint)+
+    " · Kalan: "+cash(Math.max(0,nextPoint-game.run));
+  $("exit-btn").disabled=reward<1;
+  $("exit-btn").textContent=reward?
+    "Şirketi sat · +"+fmt(reward)+" puan":"Exit için "+cash(PRESTIGE_BASE)+" kazan";
+
+  INVESTMENTS.forEach((u,i)=>{
+    const level=game.upgrades[u.key];
+    const done=level>=u.max;
+    $("upgrade-level-"+i).textContent=level+"/"+u.max;
+    $("upgrade-price-"+i).textContent=done?"✓ Maksimum":
+      investmentCost(i)+" yatırım puanı";
+    $("upgrade-buy-"+i).disabled=done||game.bank<investmentCost(i);
+    $("upgrade-buy-"+i).textContent=done?"✓":"Geliştir";
+  });
+
+  $("achievement-count").textContent=game.achievements.length+" / "+ACHIEVEMENTS.length;
+  ACHIEVEMENTS.forEach(a=>{
+    const done=game.achievements.includes(a.id);
+    $("achievement-"+a.id).classList.toggle("done",done);
+    $("achievement-"+a.id).title=done?"Tamamlandı · Kalıcı +%2 üretim":"Henüz tamamlanmadı";
+  });
+}
+
+document.querySelectorAll("[data-bulk]").forEach(button=>{
+  button.onclick=()=>{
+    bulk=button.dataset.bulk;
+    document.querySelectorAll("[data-bulk]").forEach(b=>{
+      b.classList.toggle("active",b===button);
+    });
+    render();
+  };
+});
+
+$("click-btn").addEventListener("click",e=>{
+  advance();
+  const amount=clickPower();
+  earn(amount);
+  game.clicks=Math.min(Number.MAX_SAFE_INTEGER,game.clicks+1);
+  checkAchievements();
+  render();
+
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const node=document.createElement("span");
+  node.className="float";
+  node.textContent="+"+cash(amount);
+  const rect=$("click-btn").getBoundingClientRect();
+  node.style.left=(e.detail===0?rect.width/2:
+    Math.max(25,Math.min(rect.width-25,e.clientX-rect.left)))+"px";
+  node.style.top="45px";
+  $("click-btn").appendChild(node);
+  setTimeout(()=>node.remove(),850);
+});
+
+$("office-btn").onclick=()=>{
+  advance();
+  const next=OFFICES[game.office];
+  if(!next||game.money<next.cost) return;
+  game.money-=next.cost;
+  game.office++;
+  checkAchievements();
+  toast(next.icon+" Yeni ofis: "+next.name+"!");
+  render();save();
+};
+
+$("exit-btn").onclick=async()=>{
+  advance();
+  const preview=prestigeReward();
+  if(preview<1) return;
+  const accepted=await confirmDialog(
+    "Şirketini satmaya hazır mısın?",
+    "En az "+fmt(preview)+" yatırımcı puanı kazanacaksın.\n\n"+
+    "Kasan, ekibin, ofisin, Ar-Ge puanın ve araştırmaların sıfırlanacak. "+
+    "Başarımların, yatırımcı puanların ve kalıcı geliştirmelerin korunacak.",
+    "Exit yap"
+  );
+  if(!accepted) return;
+  advance();
+  const reward=prestigeReward();
+  if(reward<1) return;
+  const old=game;
+  game=fresh();
+  game.lifetime=old.lifetime;
+  game.angels=Math.min(Number.MAX_SAFE_INTEGER,old.angels+reward);
+  game.bank=Math.min(Number.MAX_SAFE_INTEGER,old.bank+reward);
+  game.exits=Math.min(Number.MAX_SAFE_INTEGER,old.exits+1);
+  game.clicks=old.clicks;
+  game.upgrades={...old.upgrades};
+  game.achievements=[...old.achievements];
+  game.played=old.played;
+  lastWall=Date.now();
+  checkAchievements();
+  toast("🚀 Exit tamamlandı! +"+fmt(reward)+" kalıcı yatırımcı puanı.");
+  render();save();
+};
+
+$("export-btn").onclick=()=>{
+  advance();save();
+  const payload=JSON.stringify({version:VERSION,savedAt:Date.now(),game},null,2);
+  const blob=new Blob([payload],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="startup-empire-"+new Date().toISOString().slice(0,10)+".json";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast("↓ Kayıt dosyası hazır.");
+};
+
+$("import-btn").onclick=()=>$("import-file").click();
+$("import-file").onchange=async e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  try{
+    if(file.size>1000000) throw new Error("Kayıt dosyası çok büyük.");
+    const loaded=validate(JSON.parse(await file.text()));
+    const accepted=await confirmDialog(
+      "Kaydı yükle",
+      "Mevcut ilerlemenin yerine dosyadaki kayıt gelecek. "+
+      "Mevcut oyununu önce indirerek yedekleyebilirsin.",
+      "Yükle"
+    );
+    if(!accepted) return;
+    game=loaded.state;
+    checkAchievements(false);
+    applyOffline(Math.max(0,(Date.now()-loaded.savedAt)/1000));
+    lastWall=Date.now();
+    render();save();
+    toast("✓ Kayıt başarıyla yüklendi.");
+  }catch(error){
+    toast("⚠ "+(error.message||"Kayıt yüklenemedi."));
+  }finally{
+    e.target.value="";
+  }
+};
+
+$("reset-btn").onclick=async()=>{
+  const accepted=await confirmDialog(
+    "Tüm ilerlemeyi sil?",
+    "Bu işlem mevcut oyundaki tüm ilerlemeyi ve kalıcı bonusları sıfırlar. "+
+    "Geri dönmek için önceden indirilmiş bir kayıt dosyan gerekir.",
+    "Her şeyi sıfırla"
+  );
+  if(!accepted) return;
+  game=fresh();
+  lastWall=Date.now();
+  render();save();
+  toast("Yeni imparatorluğun hazır. İyi şanslar!");
+};
+
+document.addEventListener("visibilitychange",()=>{
+  const now=Date.now();
+  if(document.hidden){
+    // visibilitychange geldiğinde document.hidden zaten true olduğundan
+    // son görünür zaman dilimini burada doğrudan tamamlıyoruz.
+    const elapsed=Math.max(0,(now-lastWall)/1000);
+    if(elapsed>30) applyOffline(elapsed);
+    else simulate(elapsed);
+    lastWall=now;
+    save();
+  }else{
+    applyOffline(Math.max(0,(now-lastWall)/1000));
+    lastWall=now;
+    render();save();
+  }
+});
+window.addEventListener("pagehide",()=>{
+  if(!document.hidden) advance();
+  save();
+});
+
+mount();
+load();
+checkAchievements(false);
+lastWall=Date.now();
+render();
+
+setInterval(()=>{
+  if(document.hidden) return;
+  advance();
+  const now=Date.now();
+  if(now-lastRender>=250){
+    render();
+    lastRender=now;
+  }
+  if(now-lastSave>=10000) save();
+},100);
+
+if(!storageWorks){
+  toast("⚠ Tarayıcı kayıt izni vermiyor. İlerlemeni kaydı indir düğmesiyle yedekle.");
+}
+</script>
 </body>
 </html>
