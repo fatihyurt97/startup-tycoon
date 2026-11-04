@@ -11,6 +11,7 @@
             --accent-color: #38bdf8;
             --text-color: #f8fafc;
             --button-hover: #0ea5e9;
+            --success-color: #4ade80;
         }
 
         body {
@@ -18,7 +19,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,24 +27,24 @@
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         h1 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--accent-color);
         }
 
         #subtitle {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #94a3b8;
         }
 
         .game-container {
             display: flex;
-            gap: 20px;
-            max-width: 900px;
+            gap: 15px;
+            max-width: 1100px;
             width: 100%;
             flex-wrap: wrap;
             justify-content: center;
@@ -52,73 +53,92 @@
         .panel {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             flex: 1;
-            min-width: 280px;
+            min-width: 300px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            text-align: center;
         }
 
         .stat-box {
-            font-size: 1.5rem;
-            margin: 15px 0;
+            font-size: 1.4rem;
+            margin: 10px 0;
             font-weight: bold;
-            color: #4ade80;
+            color: var(--success-color);
+            text-align: center;
         }
 
         button {
             background-color: var(--accent-color);
             color: #0f172a;
             border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
+            padding: 10px 15px;
+            font-size: 0.95rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             background-color: var(--button-hover);
             transform: translateY(-2px);
         }
 
-        button:active {
-            transform: translateY(0);
+        button:disabled {
+            background-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
         }
 
-        .shop-item {
+        .shop-item, .project-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #0f172a;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .shop-item button {
-            width: auto;
-            margin-top: 0;
             padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             font-size: 0.9rem;
         }
 
-        /* İleride PNG koyacağımız görsel alanı */
+        .shop-item button, .project-item button {
+            width: auto;
+            margin-top: 0;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+        }
+
         #visual-area {
             width: 100%;
-            height: 150px;
+            height: 120px;
             background: #0b0f19;
             border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #475569;
-            margin-bottom: 15px;
+            color: #94a3b8;
+            margin-bottom: 12px;
             border: 2px dashed #334155;
-            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            color: var(--accent-color);
+            border-bottom: 1px solid #334155;
+            padding-bottom: 5px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -130,28 +150,35 @@
     </header>
 
     <div class="game-container">
-        <!-- Sol Panel: Tıklama ve Kazanım -->
+        <!-- Sol Panel: Ofis ve Tıklama -->
         <div class="panel">
-            <h3>Ofis Durumu</h3>
-            <!-- İleride buraya kendi PNG görsellerinizi koyacaksınız -->
+            <div class="section-title">Ofis Durumu</div>
             <div id="visual-area">
-                [ Buraya Garaj / Ofis PNG'si Gelecek ]
+                <span id="current-office-name" style="font-weight: bold; color: #38bdf8;">🏠 Garaj</span>
+                <span style="font-size: 0.8rem; margin-top: 5px;">[ İleride Buraya PNG Gelecek ]</span>
             </div>
             
-            <div>Kasa (Dolar)</div>
+            <div class="info-text">Kasa (Dolar)</div>
             <div class="stat-box" id="money-display">$0</div>
             
-            <button id="click-btn">💻 Kod Yaz (+1 $)</button>
+            <button id="click-btn">💻 Kod Yaz (+<span id="click-power">1</span> $)</button>
+            
+            <div style="margin-top: 15px;">
+                <div class="info-text">Toplam Pasif Gelir: <span id="passive-display" style="color: var(--success-color);">0</span> $/sn</div>
+                <div class="info-text">Pazarlama Hype Süresi: <span id="hype-display">Yok</span></div>
+            </div>
+
+            <button id="buy-hype" style="background-color: #f59e0b; color: #fff; margin-top: 10px;">📢 Reklam Kampanyası Başlat (50$)</button>
         </div>
 
-        <!-- Sağ Panel: Yükseltmeler ve Otomasyon -->
+        <!-- Orta Panel: Ekip ve Ofis Yükseltme -->
         <div class="panel">
-            <h3>Ekip & Ofis</h3>
+            <div class="section-title">Ekip & Otomasyon</div>
             
             <div class="shop-item">
                 <div style="text-align: left;">
                     <div id="intern-count">Stajyer: 0</div>
-                    <small style="color: #94a3b8;">Maliyet: <span id="intern-cost">15</span>$ | +1$/sn</small>
+                    <small class="info-text">Maliyet: <span id="intern-cost">15</span>$ | +1$/sn</small>
                 </div>
                 <button id="buy-intern">Satın Al</button>
             </div>
@@ -159,24 +186,81 @@
             <div class="shop-item">
                 <div style="text-align: left;">
                     <div id="dev-count">Yazılımcı: 0</div>
-                    <small style="color: #94a3b8;">Maliyet: <span id="dev-cost">100</span>$ | +8$/sn</small>
+                    <small class="info-text">Maliyet: <span id="dev-cost">100</span>$ | +8$/sn</small>
                 </div>
                 <button id="buy-dev">Satın Al</button>
+            </div>
+
+            <div class="section-title">Ofis Büyütme (Milestone)</div>
+            <div class="shop-item" style="flex-direction: column; align-items: stretch; gap: 5px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span id="office-level-info" style="font-weight: bold;">Mevcut: Garaj</span>
+                    <span id="office-cost-info" style="color: #f59e0b;">Maliyet: 500$</span>
+                </div>
+                <small class="info-text" style="text-align: left;">Sonraki Ofis: Kuluçka Merkezi (Tıklama ve Pasif x2!)</small>
+                <button id="upgrade-office" style="background-color: #10b981; color: white;">Ofisi Taşı / Büyüt</button>
+            </div>
+        </div>
+
+        <!-- Sağ Panel: Ürün Geliştirme Projeleri -->
+        <div class="panel">
+            <div class="section-title">Ürün Geliştirme</div>
+            
+            <div class="project-item">
+                <div style="text-align: left;">
+                    <div style="font-weight: bold;">Mobil Oyun</div>
+                    <small class="info-text">Getiri: +5$/sn</small>
+                </div>
+                <button id="proj-game" onclick="buyProject('game', 300, 5)">Geliştir (300$)</button>
+            </div>
+
+            <div class="project-item">
+                <div style="text-align: left;">
+                    <div style="font-weight: bold;">E-Ticaret Altyapısı</div>
+                    <small class="info-text">Getiri: +25$/sn</small>
+                </div>
+                <button id="proj-ecommerce" onclick="buyProject('ecommerce', 1500, 25)">Geliştir (1500$)</button>
+            </div>
+
+            <div class="project-item">
+                <div style="text-align: left;">
+                    <div style="font-weight: bold;">Yapay Zeka (AI) Modeli</div>
+                    <small class="info-text">Getiri: +120$/sn</small>
+                </div>
+                <button id="proj-ai" onclick="buyProject('ai', 8000, 120)">Geliştir (8000$)</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Oyun Değişkenleri
         let money = 0;
-        let perClick = 1;
+        let clickPower = 1;
+        let passiveMultiplier = 1;
         
         let intern = { count: 0, cost: 15, income: 1 };
         let dev = { count: 0, cost: 100, income: 8 };
+        
+        let offices = [
+            { name: "🏠 Garaj", cost: 0, multiplier: 1 },
+            { name: "🏢 Kuluçka Merkezi", cost: 500, multiplier: 2 },
+            { name: "🏙️ Plaza Katı", cost: 5000, multiplier: 5 },
+            { name: "🚀 Silikon Vadisi Kampüsü", cost: 30000, multiplier: 15 }
+        ];
+        let currentOfficeIndex = 0;
 
-        // HTML Elementleri
+        let projects = {
+            game: { purchased: false },
+            ecommerce: { purchased: false },
+            ai: { purchased: false }
+        };
+
+        let hypeTime = 0;
+
+        // Elementler
         const moneyDisplay = document.getElementById('money-display');
         const clickBtn = document.getElementById('click-btn');
+        const clickPowerDisplay = document.getElementById('click-power');
+        const passiveDisplay = document.getElementById('passive-display');
         
         const buyInternBtn = document.getElementById('buy-intern');
         const internCountDisplay = document.getElementById('intern-count');
@@ -186,23 +270,32 @@
         const devCountDisplay = document.getElementById('dev-count');
         const devCostDisplay = document.getElementById('dev-cost');
 
-        // Tıklama Olayı (Kod Yazma)
+        const upgradeOfficeBtn = document.getElementById('upgrade-office');
+        const officeLevelInfo = document.getElementById('office-level-info');
+        const officeCostInfo = document.getElementById('office-cost-info');
+        const currentOfficeName = document.getElementById('current-office-name');
+
+        const buyHypeBtn = document.getElementById('buy-hype');
+        const hypeDisplay = document.getElementById('hype-display');
+
+        // Tıklama Olayı
         clickBtn.addEventListener('click', () => {
-            money += perClick;
+            let mult = hypeTime > 0 ? 2 : 1;
+            money += clickPower * passiveMultiplier * mult;
             updateUI();
         });
 
-        // Stajyer Satın Alma
+        // Stajyer
         buyInternBtn.addEventListener('click', () => {
             if (money >= intern.cost) {
                 money -= intern.cost;
                 intern.count++;
-                intern.cost = Math.floor(intern.cost * 1.15); // Her alışta fiyat artar
+                intern.cost = Math.floor(intern.cost * 1.15);
                 updateUI();
             }
         });
 
-        // Yazılımcı Satın Alma
+        // Yazılımcı
         buyDevBtn.addEventListener('click', () => {
             if (money >= dev.cost) {
                 money -= dev.cost;
@@ -212,19 +305,96 @@
             }
         });
 
-        // Arayüzü Güncelleme Fonksiyonu
-        function updateUI() {
-            moneyDisplay.innerText = `$${Math.floor(money)}`;
-            internCountDisplay.innerText = `Stajyer: ${intern.count}`;
-            internCostDisplay.innerText = intern.cost;
-            devCountDisplay.innerText = `Yazılımcı: ${dev.count}`;
-            devCostDisplay.innerText = dev.cost;
+        // Ofis Yükseltme
+        upgradeOfficeBtn.addEventListener('click', () => {
+            let nextOffice = offices[currentOfficeIndex + 1];
+            if (nextOffice && money >= nextOffice.cost) {
+                money -= nextOffice.cost;
+                currentOfficeIndex++;
+                passiveMultiplier = offices[currentOfficeIndex].multiplier;
+                clickPower = currentOfficeIndex + 1;
+                updateUI();
+            }
+        });
+
+        // Ürün Projeleri Satın Alma
+        function buyProject(type, cost, incomeAdd) {
+            if (money >= cost && !projects[type].purchased) {
+                money -= cost;
+                projects[type].purchased = true;
+                
+                // Pasif gelire ekle
+                if(type === 'game') intern.income += incomeAdd;
+                if(type === 'ecommerce') dev.income += incomeAdd;
+                if(type === 'ai') { intern.income += incomeAdd * 0.5; dev.income += incomeAdd * 0.5; }
+                
+                document.getElementById('proj-' + type).disabled = true;
+                document.getElementById('proj-' + type).innerText = "Tamamlandı";
+                updateUI();
+            }
         }
 
-        // Saniyede Bir Gelen Gelir Döngüsü (Passive Income Loop)
+        // Pazarlama Kampanyası (Hype)
+        buyHypeBtn.addEventListener('click', () => {
+            if (money >= 50) {
+                money -= 50;
+                hypeTime = 15; // 15 saniye boyunca 2 kat kazanç
+                updateUI();
+            }
+        });
+
+        // Arayüz Güncelleme
+        function updateUI() {
+            moneyDisplay.innerText = `$${Math.floor(money)}`;
+            clickPowerDisplay.innerText = clickPower * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
+            
+            internCountDisplay.innerText = `Stajyer: ${intern.count}`;
+            internCostDisplay.innerText = intern.cost;
+            
+            devCountDisplay.innerText = `Yazılımcı: ${dev.count}`;
+            devCostDisplay.innerText = dev.cost;
+
+            let totalPassive = ((intern.count * intern.income) + (dev.count * dev.income)) * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
+            passiveDisplay.innerText = totalPassive;
+
+            // Ofis Bilgileri
+            currentOfficeName.innerText = offices[currentOfficeIndex].name;
+            if (currentOfficeIndex < offices.length - 1) {
+                let next = offices[currentOfficeIndex + 1];
+                officeLevelInfo.innerText = `Mevcut: ${offices[currentOfficeIndex].name}`;
+                officeCostInfo.innerText = `Maliyet: ${next.cost}$`;
+                upgradeOfficeBtn.innerText = `Taşı: ${next.name}`;
+                upgradeOfficeBtn.disabled = money < next.cost;
+            } else {
+                officeLevelInfo.innerText = `Mevcut: ${offices[currentOfficeIndex].name}`;
+                officeCostInfo.innerText = `Maksimum Seviye!`;
+                upgradeOfficeBtn.innerText = `Zirvedesin 🚀`;
+                upgradeOfficeBtn.disabled = true;
+            }
+
+            // Buton aktiflik kontrolü
+            buyInternBtn.disabled = money < intern.cost;
+            buyDevBtn.disabled = money < dev.cost;
+            buyHypeBtn.disabled = money < 50 || hypeTime > 0;
+            
+            if(hypeTime > 0) {
+                hypeDisplay.innerText = `${hypeTime} sn kaldı! 🔥`;
+                buyHypeBtn.innerText = `Kampanya Sürüyor...`;
+            } else {
+                hypeDisplay.innerText = `Yok`;
+                buyHypeBtn.innerText = `📢 Reklam Kampanyası Başlat (50$)`;
+            }
+        }
+
+        // Saniye Başı Döngü (Game Loop)
         setInterval(() => {
-            let totalPassiveIncome = (intern.count * intern.income) + (dev.count * dev.income);
-            money += totalPassiveIncome;
+            let totalPassive = ((intern.count * intern.income) + (dev.count * dev.income)) * passiveMultiplier * (hypeTime > 0 ? 2 : 1);
+            money += totalPassive;
+
+            if (hypeTime > 0) {
+                hypeTime--;
+            }
+
             updateUI();
         }, 1000);
     </script>
